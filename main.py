@@ -87,16 +87,17 @@ root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(data=get_icon.get_window_
 root.configure(bg="#fff")
 
 def get_hwid():
-  if os.name == 'posix':
-    uuid = "Linux unsupported"
-    return uuid
-  else:
-    cmd = 'wmic csproduct get uuid'
-    uuid = str(subprocess.check_output(cmd))
-    pos1 = uuid.find("\\n")+2
-    uuid = uuid[pos1:-15]
-    return uuid
-  if uuid == "":
+  try:
+    if os.name == 'posix':
+      uuid = "Linux unsupported"
+      return uuid
+    else:
+      cmd = 'wmic csproduct get uuid'
+      uuid = str(subprocess.check_output(cmd))
+      pos1 = uuid.find("\\n")+2
+      uuid = uuid[pos1:-15]
+      return uuid
+  except:
     printl("error", "get_hwid error wrong")
 
 def clear_frame(frame):
@@ -170,5 +171,6 @@ def module_list_frame():
 # Load Menu
 printl("debug", "Loading Tkinter")
 module_list_frame()
+module_scroll_frame(2,2)
 
 root.mainloop()
