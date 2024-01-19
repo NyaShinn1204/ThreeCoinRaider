@@ -15,6 +15,7 @@ import colorama
 import tkinter as tk
 import customtkinter as ctk
 from PIL import Image
+from pystyle import *
 from colorama import Fore
 from customtkinter import *
 from CTkMessagebox import CTkMessagebox
@@ -167,6 +168,23 @@ def module_list_frame():
   ctk.CTkButton(master=credit_frame, image=ctk.CTkImage(Image.open("data/link.png"),size=(20, 20)), compound="right", fg_color=c1, text_color="#fff", corner_radius=0, text="", width=20, height=20, font=("Roboto", 16, "bold"), anchor="w", command= lambda: CTkMessagebox(title="Version Info", message=f"Version: {version}\n\nDeveloper: {developer}\nTester: {testers}", width=450)).place(x=10,y=10)
   ctk.CTkLabel(master=credit_frame, fg_color=c1, text_color="#fff", corner_radius=0, text="Username: "+os.getlogin(), width=20, height=20, font=("Roboto", 16, "bold"), anchor="w").place(x=40,y=5)
   ctk.CTkLabel(master=credit_frame, fg_color=c1, text_color="#fff", corner_radius=0, text="Hwid: "+get_hwid(), width=20, height=20, font=("Roboto", 16, "bold"), anchor="w").place(x=40,y=25)
+
+# Load First
+logo = f"""
+       &#BB#&   
+     B?^:::^~?B   _______ _                    _____      _       _____       _     _           
+    P^:::^^^^^^P |__   __| |                  / ____|    (_)     |  __ \     (_)   | |          
+    J~~^^~~~~~~J    | |  | |__  _ __ ___  ___| |     ___  _ _ __ | |__) |__ _ _  __| | ___ _ __ 
+    B7~!!~~~!~7B    | |  | '_ \| '__/ _ \/ _ \ |    / _ \| | '_ \|  _  // _` | |/ _` |/ _ \ '__|
+     #5J7777J55     | |  | | | | | |  __/  __/ |___| (_) | | | | | | \ \ (_| | | (_| |  __/ |   
+       &&&&&&&      |_|  |_| |_|_|  \___|\___|\_____\___/|_|_| |_|_|  \_\__,_|_|\__,_|\___|_|   
+                                          This Software was OSS
+"""
+print(Colorate.Horizontal(Colors.cyan_to_blue, logo, 1))
+print(f"""
+You HWID: [{get_hwid()}]                Version: [{version}]
+-----------------------"""
+)
 
 # Load Menu
 printl("debug", "Loading Tkinter")
