@@ -43,8 +43,6 @@ import data.icon as get_icon
 #import bypass.solver.solver as solver
 #import bypass.solver.get_balance as get_balance
 
-colorama.init(autoreset=True)
-
 language = json.load(open('./config.json', 'r', encoding="utf-8"))["language"]
 
 lang_load = json.load(open('./data/language.json', 'r', encoding="utf-8"))
