@@ -1,0 +1,18 @@
+{
+    "en-us": {
+        "joiner_leaver": "Joiner / Leaver",
+        "spammer": "Spammer",
+        "soon": "Soon",
+        "settings": "Settings",
+        "about": "About",
+        "username": "Username"
+    },
+    "ja-jp": {
+        "joiner_leaver": "Joiner / Leaver",
+        "spammer": "Spammer",
+        "soon": "Soon",
+        "settings": "設定",
+        "about": "情報",
+        "username": "ユーザー名"
+    }
+}
