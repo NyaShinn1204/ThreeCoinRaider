@@ -45,17 +45,12 @@ import data.icon as get_icon
 
 colorama.init(autoreset=True)
 
-language = json.load(open('./config.json', 'r', encoding="utf-8"))["lang"]
+language = json.load(open('./config.json', 'r', encoding="utf-8"))["language"]
 
 lang_load = json.load(open('./data/language.json', 'r', encoding="utf-8"))
 
 def lang_load_set(name):
   return lang_load[language][name]
-  
-if language == "ja-jp":
-  set_font = ("Meiryo", 16, "bold")
-if language == "en-us":
-  set_font = ("Roboto", 16, "bold")
 
 version = "1.0.0"
 theme = "twocoin"
@@ -101,6 +96,17 @@ root.title("ThreeCoinRaider | "+version)
 root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(data=get_icon.get_window_icon()))
 root.configure(bg="#fff")
 
+#import Variable
+from data.settings import Setting
+
+#Set language
+if language == "ja-jp":
+  set_font = ("Meiryo", 16, "bold")
+  Setting.language_variable.set("Japanese | JP")
+if language == "en-us":
+  set_font = ("Roboto", 16, "bold")
+  Setting.language_variable.set("English | EN")
+
 def get_hwid():
   try:
     if os.name == 'posix':
@@ -138,7 +144,15 @@ def module_scroll_frame(num1, num2):
     if num2 == 1:
       upside_frame = ctk.CTkFrame(module_frame, width=940, height=400, border_width=0, fg_color=c2)
       upside_frame.grid(row=1, column=1, padx=6, pady=6)
-      ctk.CTkOptionMenu(upside_frame, width=508, height=25, corner_radius=4, values=["English | EN", "Japanese | JP"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff").place(x=5,y=5)
+      def set_config(value):
+          data = json.load(open('config.json'))
+          if value == "English | EN":
+            lang = "en-us"
+          if value == "Japanese | JP":
+            lang = "ja-jp"
+          data['language'] = lang
+          json.dump(data, open('config.json', 'w'), indent=4)
+      ctk.CTkOptionMenu(upside_frame, width=508, height=25, corner_radius=4, values=["English | EN", "Japanese | JP"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", command=set_config, variable=Setting.language_variable).place(x=5,y=5)
       
       printl("debug", "Open Setting Tab")
         
