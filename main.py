@@ -36,7 +36,7 @@ import data.icon as get_icon
 #import module.spam.pusher as module_pusher
 
 # Utilities Module Import
-#import module.token_checker as token_checker
+import module.token_checker as token_checker
 #import module.proxy_checker as proxy_checker
 
 # Bypass Module Import
@@ -119,6 +119,59 @@ def get_hwid():
   except:
     printl("error", "get_hwid error wrong")
 
+
+# load Check Def
+def check_config():
+  printl("debug", "Checking Config")
+  try:
+    if os.path.exists(r"config.json"):
+      tokens = open(json.load(open('./config.json', 'r', encoding="utf-8"))["token_path"], 'r').read().splitlines()
+      Setting.tokens = []
+      Setting.validtoken = 0
+      Setting.invalidtoken = 0
+      Setting.token_filenameLabel.set(os.path.basename(json.load(open('./config.json', 'r', encoding="utf-8"))["token_path"]))
+      Setting.totaltokenLabel.set("Total: "+str(len(tokens)).zfill(3))
+      threading.Thread(target=token_checker.check(tokens, update_token)).start()
+      printl("info", "Checked Config")
+    else:
+      printl("error", "Config Not Found")
+      printl("error", "Please point to it manually.")
+      token_load()
+  except Exception as error:
+    printl("error", "Config Check Error")
+    printl("error", error)
+    token_load()
+
+# Token Tab
+def token_load():
+  filepath = filedialog.askopenfilename(filetype=[("", "*.txt")], initialdir=os.path.abspath(os.path.dirname(__file__)), title="Select Tokens")
+  if filepath == "":
+    return
+  tokens = open(filepath, 'r').read().splitlines()
+  if tokens == []:
+    return
+  data = json.load(open('config.json'))
+  data['token_path'] = filepath
+  json.dump(data, open('config.json', 'w'), indent=4)
+  Setting.tokens = []
+  Setting.validtoken = 0
+  Setting.invalidtoken = 0
+  Setting.token_filenameLabel.set(os.path.basename(filepath))
+  Setting.validtokenLabel.set("Valid: 000")
+  Setting.invalidtokenLabel.set("Invalid: 000")
+  Setting.totaltokenLabel.set("Total: "+str(len(tokens)).zfill(3))
+  threading.Thread(target=token_checker.check(tokens, update_token)).start()
+
+def update_token(status, token):
+  if status == True:
+    Setting.tokens.append(token)
+    Setting.validtoken += 1
+    Setting.validtokenLabel.set("Valid: "+str(Setting.validtoken).zfill(3))
+  if status == False:
+    Setting.invalidtoken += 1
+    Setting.invalidtokenLabel.set("Invalid: "+str(Setting.invalidtoken).zfill(3))
+
+
 def clear_frame(frame):
   for widget in frame.winfo_children():
     widget.destroy()
@@ -172,15 +225,15 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Tokens", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame10_03, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
 
-      ctk.CTkButton(modules_frame10_03, text=lang_load_set("selectfile"), fg_color=c2, hover_color=c5, width=75, height=25, font=set_fonts(12, None)).place(x=5,y=33)
+      ctk.CTkButton(modules_frame10_03, text=lang_load_set("selectfile"), fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: token_load(), font=set_fonts(12, None)).place(x=5,y=33)
       ctk.CTkEntry(modules_frame10_03, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=33)
-      ctk.CTkLabel(modules_frame10_03, bg_color="#010b32", fg_color=c4, text_color="#fff", text="", width=150, height=20).place(x=85,y=33)
+      ctk.CTkLabel(modules_frame10_03, bg_color="#010b32", fg_color=c4, text_color="#fff", text="", width=150, height=20, textvariable=Setting.token_filenameLabel).place(x=85,y=33)
       tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text=lang_load_set("filename"), font=set_fonts(12, None)).place(x=240,y=31)
 
       tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Status", font=("Roboto", 12)).place(x=5,y=70)
-      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Total: 000", font=("Roboto", 12)).place(x=10,y=95)
-      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Valid: 000", font=("Roboto", 12)).place(x=10,y=115)
-      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Invalid: 000", font=("Roboto", 12)).place(x=10,y=135)
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Total: 000", font=("Roboto", 12), textvariable=Setting.totaltokenLabel).place(x=10,y=95)
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Valid: 000", font=("Roboto", 12), textvariable=Setting.validtokenLabel).place(x=10,y=115)
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Invalid: 000", font=("Roboto", 12), textvariable=Setting.invalidtokenLabel).place(x=10,y=135)
       
       
       # Frame Numnber 10_04
@@ -275,6 +328,7 @@ You HWID: [{get_hwid()}]                Version: [{version}]
 )
 
 # Load Menu
+check_config()
 printl("debug", "Loading Tkinter")
 module_list_frame()
 module_scroll_frame(2,2)
