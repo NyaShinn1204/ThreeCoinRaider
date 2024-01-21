@@ -42,14 +42,6 @@ import data.icon as get_icon
 # Bypass Module Import
 #import bypass.solver.solver as solver
 #import bypass.solver.get_balance as get_balance
-
-language = json.load(open('./config.json', 'r', encoding="utf-8"))["language"]
-
-lang_load = json.load(open('./data/language.json', 'r', encoding="utf-8"))
-
-def lang_load_set(name):
-  return lang_load[language][name]
-
 version = "1.0.0"
 theme = "twocoin"
 developer = "NyaShinn1204"
@@ -98,12 +90,17 @@ root.configure(bg="#fff")
 from data.settings import Setting
 
 #Set language
-if language == "ja-jp":
-  set_font = ("Meiryo", 16, "bold")
-  Setting.language_variable.set("Japanese | JP")
-if language == "en-us":
-  set_font = ("Roboto", 16, "bold")
-  Setting.language_variable.set("English | EN")
+
+language = json.load(open('./config.json', 'r', encoding="utf-8"))["language"]
+
+lang_load = json.load(open('./data/language.json', 'r', encoding="utf-8"))
+
+def lang_load_set(name):
+  return lang_load[language][name]
+
+set_font = (lang_load[language]["font"], 16, "bold")
+Setting.language_variable.set(lang_load[language]["name"])
+
 
 def get_hwid():
   try:

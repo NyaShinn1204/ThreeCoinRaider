@@ -1,5 +1,7 @@
 {
     "en-us": {
+        "name": "English | EN",
+        "font": "Roboto",
         "joiner_leaver": "Joiner / Leaver",
         "spammer": "Spammer",
         "soon": "Soon",
@@ -8,6 +10,8 @@
         "username": "Username"
     },
     "ja-jp": {
+        "name": "Japanese | JP",
+        "font": "Meiryo",
         "joiner_leaver": "Joiner / Leaver",
         "spammer": "Spammer",
         "soon": "Soon",
