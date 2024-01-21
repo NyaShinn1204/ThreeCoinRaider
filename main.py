@@ -137,8 +137,13 @@ def module_scroll_frame(num1, num2):
         
   if num1 == 2:
     if num2 == 1:
-      upside_frame = ctk.CTkFrame(module_frame, width=940, height=400, border_width=0, fg_color=c2)
-      upside_frame.grid(row=1, column=1, padx=6, pady=6)
+      # TODO
+      modules_frame10_01 = ctk.CTkFrame(module_frame, width=470, height=210, border_width=0, fg_color="#010b32")
+      modules_frame10_01.grid(row=0, column=0, padx=6, pady=6)
+      tk.Label(modules_frame10_01, bg="#010b32", fg="#fff", text="Other", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Canvas(modules_frame10_01, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+      
+      
       def set_config(value):
           data = json.load(open('config.json'))
           if value == "English | EN":
@@ -147,7 +152,8 @@ def module_scroll_frame(num1, num2):
             lang = "ja-jp"
           data['language'] = lang
           json.dump(data, open('config.json', 'w'), indent=4)
-      ctk.CTkOptionMenu(upside_frame, width=508, height=25, corner_radius=4, values=["English | EN", "Japanese | JP"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", command=set_config, variable=Setting.language_variable).place(x=5,y=5)
+      ctk.CTkOptionMenu(modules_frame10_01, width=508, height=25, corner_radius=4, values=["English | EN", "Japanese | JP"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", font=("Roboto", 12, "bold"), dropdown_font=("Roboto", 12, "bold"), command=set_config, variable=Setting.language_variable).place(x=5,y=55)
+      tk.Label(modules_frame10_01, bg="#010b32", fg="#fff", text="Language", font=("Roboto", 11, "bold")).place(x=0,y=30)
       
       printl("debug", "Open Setting Tab")
         
