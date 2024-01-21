@@ -37,7 +37,7 @@ import data.icon as get_icon
 
 # Utilities Module Import
 import module.token_checker as token_checker
-#import module.proxy_checker as proxy_checker
+import module.proxy_checker as proxy_checker
 
 # Bypass Module Import
 #import bypass.solver.solver as solver
@@ -172,6 +172,48 @@ def update_token(status, token):
     Setting.invalidtoken += 1
     Setting.invalidtokenLabel.set("Invalid: "+str(Setting.invalidtoken).zfill(3))
 
+# Proxy Tab
+def proxy_load():
+  threading.Thread(target=proxy_main).start()
+  
+def proxy_main():
+  proxy_type = Setting.proxytype.get()
+  print(proxy_type)
+  if proxy_type == "":
+    print("[-] Cancel proxy")
+    return
+  proxy_filepath()
+
+def proxy_filepath():
+  filepath = filedialog.askopenfilename(filetype=[("", "*.txt")], initialdir=os.path.abspath(os.path.dirname(__file__)), title="Select Proxies")
+  if filepath == "":
+    return
+  proxies = open(filepath, 'r').read().splitlines()
+  if proxies == []:
+    return
+  Setting.proxies = []
+  Setting.totalproxies = str(len(proxies))
+  Setting.vaildproxies = 0
+  Setting.invaildproxies = 0
+  Setting.proxy_filenameLabel.set(os.path.basename(filepath))
+  Setting.totalProxiesLabel.set("Total: "+Setting.totalproxies.zfill(3))
+  print("[+] Load: " + Setting.totalproxies + "Proxies")
+  time.sleep(1)
+  threading.Thread(target=proxy_checker.check(update_proxy, proxies, Setting.proxytype.get()))
+  if Setting.vaildproxies == 0:
+    printl("error","Not Found Load Vaild Proxies")
+  else:
+    printl("info","Success Load Vaild Proxies: " + str(Setting.vaildproxies))
+     
+def update_proxy(status, proxy):
+  if status == True:
+    Setting.proxies.append(proxy)
+    Setting.vaildproxies += 1
+    Setting.validProxiesLabel.set("Valid: "+str(Setting.vaildproxies).zfill(3))
+  if status == False:
+    Setting.invaildproxies += 1
+    Setting.invalidProxiesLabel.set("Invalid: "+str(Setting.invaildproxies).zfill(3))
+
 
 def clear_frame(frame):
   for widget in frame.winfo_children():
@@ -243,21 +285,23 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Proxies", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame10_04, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
 
-      ctk.CTkCheckBox(modules_frame10_04, bg_color="#010b32", text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3 ,text="Enabled").place(x=5,y=31)
-      ctk.CTkOptionMenu(modules_frame10_04, height=25, corner_radius=4, values=["http", "https", "socks4", "socks5"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", font=("Roboto", 12, "bold"), dropdown_font=("Roboto", 12, "bold")).place(x=5,y=57)
+      ctk.CTkCheckBox(modules_frame10_04, bg_color="#010b32", text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.proxy_enabled, text="Enabled").place(x=5,y=31)
+      def set_socket(socks):
+        Setting.proxytype.set(socks)
+      ctk.CTkOptionMenu(modules_frame10_04, height=25, corner_radius=4, values=["http", "https", "socks4", "socks5"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", font=("Roboto", 12, "bold"), dropdown_font=("Roboto", 12, "bold"), command=set_socket, variable=Setting.proxytype).place(x=5,y=57)
       
 
       
       tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Socket Type", font=("Roboto", 12)).place(x=150,y=55)
-      ctk.CTkButton(modules_frame10_04, text="Select File", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=90)
+      ctk.CTkButton(modules_frame10_04, text="Select File", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: proxy_load()).place(x=5,y=90)
       ctk.CTkEntry(modules_frame10_04, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=90)
-      ctk.CTkLabel(modules_frame10_04, bg_color="#010b32", fg_color=c4, text_color="#fff", text="", width=150, height=20).place(x=85,y=90)
+      ctk.CTkLabel(modules_frame10_04, bg_color="#010b32", fg_color=c4, text_color="#fff", text="", width=150, height=20, textvariable=Setting.proxy_filenameLabel).place(x=85,y=90)
       tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="File Name", font=("Roboto", 12)).place(x=240,y=87)
     
       tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Status", font=("Roboto", 12)).place(x=5,y=120)
-      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Total: 000", font=("Roboto", 12)).place(x=10,y=145)
-      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Valid: 000", font=("Roboto", 12)).place(x=10,y=165)
-      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Invalid: 000", font=("Roboto", 12)).place(x=10,y=185)
+      tk.Label(modules_frame10_04, bg=c1, fg="#fff", text="Total: 000", font=("Roboto", 12), textvariable=Setting.totalProxiesLabel).place(x=10,y=145)
+      tk.Label(modules_frame10_04, bg=c1, fg="#fff", text="Valid: 000", font=("Roboto", 12), textvariable=Setting.validProxiesLabel).place(x=10,y=165)
+      tk.Label(modules_frame10_04, bg=c1, fg="#fff", text="Invalid: 000", font=("Roboto", 12), textvariable=Setting.invalidProxiesLabel).place(x=10,y=185)
    
       
       printl("debug", "Open Setting Tab")
