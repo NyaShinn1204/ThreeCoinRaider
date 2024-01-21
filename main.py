@@ -98,9 +98,12 @@ lang_load = json.load(open('./data/language.json', 'r', encoding="utf-8"))
 def lang_load_set(name):
   return lang_load[language][name]
 
-set_font = (lang_load[language]["font"], 16, "bold")
+def set_fonts(size, mode):
+  if mode == None:
+    return (lang_load[language]["font"], size)
+  else:
+    return (lang_load[language]["font"], size, "bold")
 Setting.language_variable.set(lang_load[language]["name"])
-
 
 def get_hwid():
   try:
@@ -152,8 +155,8 @@ def module_scroll_frame(num1, num2):
             lang = "ja-jp"
           data['language'] = lang
           json.dump(data, open('config.json', 'w'), indent=4)
-      ctk.CTkOptionMenu(modules_frame10_01, width=508, height=25, corner_radius=4, values=["English | EN", "Japanese | JP"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", font=("Roboto", 12, "bold"), dropdown_font=("Roboto", 12, "bold"), command=set_config, variable=Setting.language_variable).place(x=5,y=55)
-      tk.Label(modules_frame10_01, bg="#010b32", fg="#fff", text="Language", font=("Roboto", 11, "bold")).place(x=0,y=30)
+      ctk.CTkOptionMenu(modules_frame10_01, width=450, height=25, corner_radius=4, values=["English | EN", "Japanese | JP"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", font=("Roboto", 12, "bold"), dropdown_font=("Roboto", 12, "bold"), command=set_config, variable=Setting.language_variable).place(x=5,y=55)
+      tk.Label(modules_frame10_01, bg="#010b32", fg="#fff", text=lang_load_set("language"), font=set_fonts(11, "bold")).place(x=0,y=30)
       
       
       # Frame Number 10_02
@@ -168,6 +171,16 @@ def module_scroll_frame(num1, num2):
       modules_frame10_03.grid(row=1, column=0, padx=6, pady=6)
       tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Tokens", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame10_03, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+
+      ctk.CTkButton(modules_frame10_03, text=lang_load_set("selectfile"), fg_color=c2, hover_color=c5, width=75, height=25, font=set_fonts(12, None)).place(x=5,y=33)
+      ctk.CTkEntry(modules_frame10_03, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=33)
+      ctk.CTkLabel(modules_frame10_03, bg_color="#010b32", fg_color=c4, text_color="#fff", text="", width=150, height=20).place(x=85,y=33)
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text=lang_load_set("filename"), font=set_fonts(12, None)).place(x=240,y=31)
+
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Status", font=("Roboto", 12)).place(x=5,y=70)
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Total: 000", font=("Roboto", 12)).place(x=10,y=95)
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Valid: 000", font=("Roboto", 12)).place(x=10,y=115)
+      tk.Label(modules_frame10_03, bg="#010b32", fg="#fff", text="Invalid: 000", font=("Roboto", 12)).place(x=10,y=135)
       
       
       # Frame Numnber 10_04
@@ -175,6 +188,23 @@ def module_scroll_frame(num1, num2):
       modules_frame10_04.grid(row=1, column=1, padx=6, pady=6)
       tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Proxies", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame10_04, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+
+      ctk.CTkCheckBox(modules_frame10_04, bg_color="#010b32", text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3 ,text="Enabled").place(x=5,y=31)
+      ctk.CTkOptionMenu(modules_frame10_04, height=25, corner_radius=4, values=["http", "https", "socks4", "socks5"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", font=("Roboto", 12, "bold"), dropdown_font=("Roboto", 12, "bold")).place(x=5,y=57)
+      
+
+      
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Socket Type", font=("Roboto", 12)).place(x=150,y=55)
+      ctk.CTkButton(modules_frame10_04, text="Select File", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=90)
+      ctk.CTkEntry(modules_frame10_04, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=90)
+      ctk.CTkLabel(modules_frame10_04, bg_color="#010b32", fg_color=c4, text_color="#fff", text="", width=150, height=20).place(x=85,y=90)
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="File Name", font=("Roboto", 12)).place(x=240,y=87)
+    
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Status", font=("Roboto", 12)).place(x=5,y=120)
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Total: 000", font=("Roboto", 12)).place(x=10,y=145)
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Valid: 000", font=("Roboto", 12)).place(x=10,y=165)
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Invalid: 000", font=("Roboto", 12)).place(x=10,y=185)
+   
       
       printl("debug", "Open Setting Tab")
         
@@ -212,20 +242,20 @@ def module_list_frame():
   modulelist = ctk.CTkFrame(master=root, width=230, height=720, corner_radius=0, fg_color=c4)
   modulelist.place(x=0,y=100)
   tk.Canvas(bg=c6, highlightthickness=0, height=2080, width=4).place(x=230, y=0)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("joiner_leaver"), width=195, height=40, font=set_font, anchor="w", command= lambda: module_scroll_frame(1, 1)).place(x=20,y=12)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("spammer"), width=195, height=40, font=set_font, anchor="w", command= lambda: module_scroll_frame(1, 2)).place(x=20,y=57)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_font, anchor="w").place(x=20,y=102)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_font, anchor="w").place(x=20,y=148)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_font, anchor="w").place(x=20,y=194)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_font, anchor="w").place(x=20,y=240)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/setting.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("settings"), width=195, height=40, font=set_font, anchor="w", command= lambda: module_scroll_frame(2, 1)).place(x=20,y=286)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/info.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("about"), width=195, height=40, font=set_font, anchor="w", command= lambda: module_scroll_frame(2, 2)).place(x=20,y=332)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("joiner_leaver"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(1, 1)).place(x=20,y=12)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("spammer"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(1, 2)).place(x=20,y=57)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=102)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=148)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=194)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=240)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/setting.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("settings"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(2, 1)).place(x=20,y=286)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/info.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("about"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(2, 2)).place(x=20,y=332)
   
   credit_frame = ctk.CTkFrame(root, width=1020, height=50, fg_color=c1, bg_color=c2)
   credit_frame.place(x=245, y=10)
-  ctk.CTkButton(master=credit_frame, image=ctk.CTkImage(Image.open("data/link.png"),size=(20, 20)), compound="right", fg_color=c1, text_color="#fff", corner_radius=0, text="", width=20, height=20, font=set_font, anchor="w", command= lambda: CTkMessagebox(title="Version Info", message=f"Version: {version}\n\nDeveloper: {developer}\nTester: {testers}", width=450)).place(x=10,y=10)
-  ctk.CTkLabel(master=credit_frame, fg_color=c1, text_color="#fff", corner_radius=0, text=lang_load_set("username")+": "+os.getlogin(), width=20, height=20, font=set_font, anchor="w").place(x=40,y=5)
-  ctk.CTkLabel(master=credit_frame, fg_color=c1, text_color="#fff", corner_radius=0, text="Hwid: "+get_hwid(), width=20, height=20, font=set_font, anchor="w").place(x=40,y=25)
+  ctk.CTkButton(master=credit_frame, image=ctk.CTkImage(Image.open("data/link.png"),size=(20, 20)), compound="right", fg_color=c1, text_color="#fff", corner_radius=0, text="", width=20, height=20, font=set_fonts(16, None), anchor="w", command= lambda: CTkMessagebox(title="Version Info", message=f"Version: {version}\n\nDeveloper: {developer}\nTester: {testers}", width=450)).place(x=10,y=10)
+  ctk.CTkLabel(master=credit_frame, fg_color=c1, text_color="#fff", corner_radius=0, text=lang_load_set("username")+": "+os.getlogin(), width=20, height=20, font=set_fonts(16, "bold"), anchor="w").place(x=40,y=5)
+  ctk.CTkLabel(master=credit_frame, fg_color=c1, text_color="#fff", corner_radius=0, text="Hwid: "+get_hwid(), width=20, height=20, font=set_fonts(16, "bold"), anchor="w").place(x=40,y=25)
 
 # Load First
 logo = f"""

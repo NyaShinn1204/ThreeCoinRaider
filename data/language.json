@@ -7,7 +7,10 @@
         "soon": "Soon",
         "settings": "Settings",
         "about": "About",
-        "username": "Username"
+        "username": "Username",
+        "language": "Language",
+        "selectfile": "Select File",
+        "filename": "File Name"
     },
     "ja-jp": {
         "name": "Japanese | JP",
@@ -17,6 +20,9 @@
         "soon": "Soon",
         "settings": "設定",
         "about": "情報",
-        "username": "ユーザー名"
+        "username": "ユーザー名",
+        "language": "言語",
+        "selectfile": "ファイル選択",
+        "filename": "ファイル名"
     }
 }
