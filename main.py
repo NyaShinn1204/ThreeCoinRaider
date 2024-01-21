@@ -195,6 +195,11 @@ def module_scroll_frame(num1, num2):
       tk.Label(credits_frame, bg=c2, fg=c10, text=contributors, font=("Roboto", 12)).place(x=137,y=75)
       tk.Label(credits_frame, bg=c2, fg="#fff", text="Main testers:", font=("Roboto", 12)).place(x=0,y=100)
       tk.Label(credits_frame, bg=c2, fg=c10, text=testers, font=("Roboto", 12)).place(x=100,y=100)
+      
+      tk.Label(credits_frame, bg=c2, fg="#fff", text="Respect:", font=("Roboto", 12)).place(x=0,y=150)
+      tk.Label(credits_frame, bg=c2, fg=c10, text="Akebi GC", font=("Roboto", 12)).place(x=15,y=170)
+      tk.Label(credits_frame, bg=c2, fg=c10, text="Bkebi GC", font=("Roboto", 12)).place(x=15,y=190)
+      tk.Label(credits_frame, bg=c2, fg=c10, text="TwoCoinRaider", font=("Roboto", 12)).place(x=15,y=210)
 
       printl("debug", "Open About Tab")
 
