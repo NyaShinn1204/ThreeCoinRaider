@@ -124,7 +124,7 @@ def get_hwid():
 def check_config():
   printl("debug", "Checking Config")
   try:
-    if os.path.exists(r"config.json"):
+    if os.path.exists(r"config.json") and not json.load(open('./config.json', 'r', encoding="utf-8"))["token_path"] == "":
       tokens = open(json.load(open('./config.json', 'r', encoding="utf-8"))["token_path"], 'r').read().splitlines()
       Setting.tokens = []
       Setting.validtoken = 0
@@ -153,6 +153,7 @@ def token_load():
   data = json.load(open('config.json'))
   data['token_path'] = filepath
   json.dump(data, open('config.json', 'w'), indent=4)
+  printl("info", f"Set Token File {os.path.basename(filepath)}")
   Setting.tokens = []
   Setting.validtoken = 0
   Setting.invalidtoken = 0
@@ -313,13 +314,13 @@ def module_list_frame():
 # Load First
 logo = f"""
        &#BB#&   
-     B?^:::^~?B   _______ _                    _____      _       _____       _     _           
-    P^:::^^^^^^P |__   __| |                  / ____|    (_)     |  __ \     (_)   | |          
-    J~~^^~~~~~~J    | |  | |__  _ __ ___  ___| |     ___  _ _ __ | |__) |__ _ _  __| | ___ _ __ 
-    B7~!!~~~!~7B    | |  | '_ \| '__/ _ \/ _ \ |    / _ \| | '_ \|  _  // _` | |/ _` |/ _ \ '__|
-     #5J7777J55     | |  | | | | | |  __/  __/ |___| (_) | | | | | | \ \ (_| | | (_| |  __/ |   
-       &&&&&&&      |_|  |_| |_|_|  \___|\___|\_____\___/|_|_| |_|_|  \_\__,_|_|\__,_|\___|_|   
-                                          This Software was OSS
+     B?^:::^~?B        _______ _                    _____      _       _____       _     _           
+    P^:::^^^^^^P      |__   __| |                  / ____|    (_)     |  __ \     (_)   | |          
+    J~~^^~~~~~~J         | |  | |__  _ __ ___  ___| |     ___  _ _ __ | |__) |__ _ _  __| | ___ _ __ 
+    B7~!!~~~!~7B         | |  | '_ \| '__/ _ \/ _ \ |    / _ \| | '_ \|  _  // _` | |/ _` |/ _ \ '__|
+     #5J7777J55          | |  | | | | | |  __/  __/ |___| (_) | | | | | | \ \ (_| | | (_| |  __/ |   
+       &&&&&&&           |_|  |_| |_|_|  \___|\___|\_____\___/|_|_| |_|_|  \_\__,_|_|\__,_|\___|_|   
+                                    :skull:  Proudly Free, Never For Free  :skull:
 """
 print(Colorate.Horizontal(Colors.cyan_to_blue, logo, 1))
 print(f"""
