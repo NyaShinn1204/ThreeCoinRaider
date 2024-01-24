@@ -16,6 +16,7 @@ import (
 
 func main() {
 	// main関数を記述
+	send_requests()
 }
 
 //export send_requests
@@ -36,7 +37,7 @@ func send_requests() {
 	wg.Wait()
 }
 
-func sendRequest(url string) string {
+func sendRequest(url string) {
 	proxy := getRandomProxy()
 
 	headers := map[string]string{
@@ -64,6 +65,7 @@ func sendRequest(url string) string {
 	postJSON, err := json.Marshal(postData)
 	if err != nil {
 		fmt.Println("JSON marshal error:", err)
+		return
 	}
 
 	client := &http.Client{
@@ -75,6 +77,7 @@ func sendRequest(url string) string {
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(postJSON))
 	if err != nil {
 		fmt.Println("Request error:", err)
+		return
 	}
 
 	for key, value := range headers {
@@ -84,15 +87,14 @@ func sendRequest(url string) string {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Request error:", err)
+		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 200 {
 		fmt.Println("Sushi:", resp.StatusCode, proxy)
-		return "succ"
 	} else {
 		fmt.Println("Failed:", resp.StatusCode, proxy)
-		return "fail"
 	}
 }
 
