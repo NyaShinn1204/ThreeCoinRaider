@@ -92,7 +92,7 @@ func sendRequest(url string) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 200 {
-		fmt.Println("Sushi:", resp.StatusCode, proxy)
+		fmt.Println("Success:", resp.StatusCode, proxy)
 	} else {
 		fmt.Println("Failed:", resp.StatusCode, proxy)
 	}

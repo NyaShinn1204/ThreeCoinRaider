@@ -25,6 +25,8 @@ from CTkToolTip import *
 import data.icon as get_icon
 
 # Module Import
+
+import module.spam.spammer_go as module_spammer
 #import module.joiner as module_joiner
 #import module.leaver as module_leaver
 #import module.spam.spammer as module_spammer
@@ -229,10 +231,12 @@ def module_scroll_frame(num1, num2):
     if num2 == 1:
   
       printl("debug", "Open Join Leave Tab")
+      #threading.Thread(target=module_spammer.stop).start()
         
     if num2 == 2:
         
       printl("debug", "Open Spammer Tab")
+      #threading.Thread(target=module_spammer.start).start()
         
   if num1 == 2:
     if num2 == 1:
