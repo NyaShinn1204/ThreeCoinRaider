@@ -7,8 +7,8 @@ import re
 from httpx import Client
 from httpx_socks import SyncProxyTransport
 
-import module.spam.channel_scrape as ch_scrape
-import module.spam.user_scrape as user_scrape
+import module.spam.utilities.channel_scrape as ch_scrape
+import module.spam.utilities.user_scrape as user_scrape
 import bypass.header as header
 import bypass.random_convert as random_convert
 
