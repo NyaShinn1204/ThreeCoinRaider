@@ -320,6 +320,8 @@ def module_scroll_frame(num1, num2):
               
     if num2 == 2:
       # Spammer
+      
+      # Normal Spammer
       # Frame Number 02_01
       modules_frame02_01 = ctk.CTkFrame(module_frame, width=470, height=300, border_width=0, fg_color=c13)
       modules_frame02_01.grid(row=0, column=0, padx=6, pady=6)
@@ -373,7 +375,7 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", textvariable=Setting.suc_nmspam_Label, font=("Roboto", 12)).place(x=335,y=169)
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", textvariable=Setting.fai_nmspam_Label, font=("Roboto", 12)).place(x=335,y=194)
         
-      
+      # Go Spammer
       # Frame Number 02_02
       modules_frame02_02 = ctk.CTkFrame(module_frame, width=470, height=300, border_width=0, fg_color=c13)
       modules_frame02_02.grid(row=0, column=1, padx=6, pady=6)
@@ -389,7 +391,7 @@ def module_scroll_frame(num1, num2):
 
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=5,y=30)
       gospam_message = ctk.CTkTextbox(modules_frame02_02, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
-      gospam_message.place(x=150,y=55)
+      gospam_message.place(x=5,y=55)
         
       ctk.CTkButton(modules_frame02_02, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 2, 1)).place(x=5,y=245)
       ctk.CTkButton(modules_frame02_02, text="Stop", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 2, 2)).place(x=70,y=245)
@@ -403,6 +405,8 @@ def module_scroll_frame(num1, num2):
   if num1 == 2:
     if num2 == 1:
       # Setting
+      
+      # Other
       # Frame Number 10_01
       modules_frame10_01 = ctk.CTkFrame(module_frame, width=470, height=210, border_width=0, fg_color="#010b32")
       modules_frame10_01.grid(row=0, column=0, padx=6, pady=6)
@@ -421,7 +425,7 @@ def module_scroll_frame(num1, num2):
       ctk.CTkOptionMenu(modules_frame10_01, width=450, height=25, corner_radius=4, values=["English | EN", "Japanese | JP"], fg_color=c1, button_color=c1, button_hover_color=c1, dropdown_fg_color=c1, dropdown_hover_color=c12, dropdown_text_color="#fff", font=("Roboto", 12, "bold"), dropdown_font=("Roboto", 12, "bold"), command=set_config, variable=Setting.language_variable).place(x=5,y=55)
       tk.Label(modules_frame10_01, bg="#010b32", fg="#fff", text=lang_load_set("language"), font=set_fonts(11, "bold")).place(x=0,y=30)
       
-      
+      # Coming Soon
       # Frame Number 10_02
       modules_frame10_02 = ctk.CTkFrame(module_frame, width=470, height=210, border_width=0, fg_color="#010b32")
       modules_frame10_02.grid(row=0, column=1, padx=6, pady=6)
