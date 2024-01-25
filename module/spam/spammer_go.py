@@ -2,11 +2,11 @@ import subprocess
 import signal
 import threading
 
-def start(channelid):
+def start(module_status, serverid, channelid, contents):
     global process
     print("Starting the process.")
-    process = subprocess.Popen(['go', 'run', 'spammer-go.go', channelid], stdout=subprocess.PIPE, text=True, cwd=r"./module/spam/")
-    monitor_thread = threading.Thread(target=monitor_process, args=(channelid,))
+    process = subprocess.Popen(['go', 'run', 'spammer-go.go', serverid, channelid, contents], stdout=subprocess.PIPE, text=True, cwd=r"./module/spam/")
+    monitor_thread = threading.Thread(target=monitor_process, args=(module_status, channelid))
     monitor_thread.start()
 
 def stop():
@@ -15,12 +15,14 @@ def stop():
     if process.poll() is None:
         process.terminate()
 
-def monitor_process(channelid):
+def monitor_process(module_status, channelid):
     global process
     while process.poll() is None:
         output = process.stdout.readline().strip()
         if output:
             if 'Success' in output:
                 print(f"[+] 送信に成功しました ChannelID: {channelid}")
+                module_status(2, 2, 1)
             else:
                 print(f"[-] 送信に失敗しました ChannelID: {channelid}")
+                module_status(2, 2, 2)

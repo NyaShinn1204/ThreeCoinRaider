@@ -9,11 +9,11 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
 	"time"
 )
-import "os"
 
 func main() {
 	// main関数を記述
@@ -23,7 +23,9 @@ func main() {
 //export send_requests
 func send_requests() {
 	args := os.Args[1:]
-	channelid := args[0]
+	serverid := args[0]
+	channelid := args[1]
+	contents := args[2]
 
 	var wg sync.WaitGroup
 
@@ -33,7 +35,7 @@ func send_requests() {
 			defer wg.Done()
 
 			for {
-				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid))
+				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents)
 			}
 		}()
 	}
@@ -41,7 +43,7 @@ func send_requests() {
 	wg.Wait()
 }
 
-func sendRequest(url string) {
+func sendRequest(url string, serverid string, contents string) {
 	proxy := getRandomProxy()
 
 	headers := map[string]string{
@@ -63,7 +65,7 @@ func sendRequest(url string) {
 	}
 
 	postData := map[string]interface{}{
-		"content": "<@1188845591439081551> Hello, Discord!",
+		"content": contents,
 	}
 
 	postJSON, err := json.Marshal(postData)

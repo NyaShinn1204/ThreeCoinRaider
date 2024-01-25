@@ -72,6 +72,19 @@ class Setting:
   nmspam_delay.set(0.1)
   
   
+  # go spam
+  suc_gospam_Label = tk.StringVar()
+  suc_gospam_Label.set("Success: 000")
+  fai_gospam_Label = tk.StringVar()
+  fai_gospam_Label.set("Failed: 000")  
+
+  gospam_serverid = tk.StringVar()
+  gospam_serverid.set("")
+  gospam_channelid = tk.StringVar()
+  gospam_channelid.set("")
+  
 class SettingVariable:
   nmspamresult_success = 0
   nmspamresult_failed = 0
+  gospamresult_success = 0
+  gospamresult_failed = 0
