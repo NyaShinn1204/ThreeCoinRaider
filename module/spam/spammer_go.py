@@ -2,10 +2,10 @@ import subprocess
 import signal
 import threading
 
-def start(module_status, serverid, channelid, contents):
+def start(token_file, proxie_file, module_status, serverid, channelid, contents):
     global process
     print("Starting the process.")
-    process = subprocess.Popen(['go', 'run', 'spammer-go.go', serverid, channelid, contents], stdout=subprocess.PIPE, text=True, cwd=r"./module/spam/")
+    process = subprocess.Popen(['go', 'run', 'spammer-go.go', serverid, channelid, contents, f'{token_file}', f'{proxie_file}'], stdout=subprocess.PIPE, text=True, cwd=r"./module/spam/")
     monitor_thread = threading.Thread(target=monitor_process, args=(module_status, channelid))
     monitor_thread.start()
 

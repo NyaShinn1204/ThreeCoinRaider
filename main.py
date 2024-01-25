@@ -195,6 +195,10 @@ def proxy_filepath():
   proxies = open(filepath, 'r').read().splitlines()
   if proxies == []:
     return
+  data = json.load(open('config.json'))
+  data['proxie_path'] = filepath
+  json.dump(data, open('config.json', 'w'), indent=4)
+  printl("info", f"Set Proxie File {os.path.basename(filepath)}")
   Setting.proxies = []
   Setting.totalproxies = str(len(proxies))
   Setting.vaildproxies = 0
@@ -249,13 +253,19 @@ def module_thread(num1, num2, num3):
           return    
     
         threading.Thread(target=module_normal_spammer.start, args=(delay, tokens, module_status, proxysetting, proxies, proxytype, serverid, channelid, contents, allchannel, allping, mentions, randomstring, ratelimit, randomconvert)).start()
-        #threading.Thread(target=module_go_spammer.start, args=(channelid,)).start()
 
       if num3 == 2:
         threading.Thread(target=module_normal_spammer.stop).start()
 
     if num2 == 2:
       if num3 == 1:
+        token_file = json.load(open('./config.json', 'r', encoding="utf-8"))["token_path"]
+        proxie_file = json.load(open('./config.json', 'r', encoding="utf-8"))["proxie_path"]
+        
+        if proxie_file == "":
+          print("This Module use Proxie.")
+          return
+        
         serverid = str(Setting.gospam_serverid.get())
         channelid = str(Setting.gospam_channelid.get())
         
@@ -268,7 +278,7 @@ def module_thread(num1, num2, num3):
           print("[-] ChannelID is not set")
           return    
     
-        threading.Thread(target=module_go_spammer.start, args=(module_status, serverid, channelid, contents)).start()
+        threading.Thread(target=module_go_spammer.start, args=(token_file, proxie_file, module_status, serverid, channelid, contents)).start()
 
       if num3 == 2:
         threading.Thread(target=module_go_spammer.stop).start()
@@ -307,8 +317,7 @@ def module_scroll_frame(num1, num2):
       # Join Leave
   
       printl("debug", "Open Join Leave Tab")
-      #threading.Thread(target=module_spammer.stop).start()
-        
+              
     if num2 == 2:
       # Spammer
       # Frame Number 02_01
@@ -344,7 +353,6 @@ def module_scroll_frame(num1, num2):
       ctk.CTkButton(modules_frame02_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=175)
       ctk.CTkEntry(modules_frame02_01, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.nmspam_channelid).place(x=85,y=175)
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=173)
-      #      ctk.CTkEntry(modules_frame10_03, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=33)
 
 
       CTkLabel(modules_frame02_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=197)
@@ -391,7 +399,6 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", textvariable=Setting.fai_gospam_Label, font=("Roboto", 12)).place(x=335,y=194)        
 
       printl("debug", "Open Spammer Tab")
-      #threading.Thread(target=module_spammer.start).start()
         
   if num1 == 2:
     if num2 == 1:
@@ -459,9 +466,9 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="File Name", font=("Roboto", 12)).place(x=240,y=87)
     
       tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Status", font=("Roboto", 12)).place(x=5,y=120)
-      tk.Label(modules_frame10_04, bg=c1, fg="#fff", text="Total: 000", font=("Roboto", 12), textvariable=Setting.totalProxiesLabel).place(x=10,y=145)
-      tk.Label(modules_frame10_04, bg=c1, fg="#fff", text="Valid: 000", font=("Roboto", 12), textvariable=Setting.validProxiesLabel).place(x=10,y=165)
-      tk.Label(modules_frame10_04, bg=c1, fg="#fff", text="Invalid: 000", font=("Roboto", 12), textvariable=Setting.invalidProxiesLabel).place(x=10,y=185)
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Total: 000", font=("Roboto", 12), textvariable=Setting.totalProxiesLabel).place(x=10,y=145)
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Valid: 000", font=("Roboto", 12), textvariable=Setting.validProxiesLabel).place(x=10,y=165)
+      tk.Label(modules_frame10_04, bg="#010b32", fg="#fff", text="Invalid: 000", font=("Roboto", 12), textvariable=Setting.invalidProxiesLabel).place(x=10,y=185)
    
       
       printl("debug", "Open Setting Tab")

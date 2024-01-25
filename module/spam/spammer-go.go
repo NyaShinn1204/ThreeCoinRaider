@@ -26,6 +26,8 @@ func send_requests() {
 	serverid := args[0]
 	channelid := args[1]
 	contents := args[2]
+	token_file := args[3]
+	proxie_file := args[4]
 
 	var wg sync.WaitGroup
 
@@ -35,7 +37,7 @@ func send_requests() {
 			defer wg.Done()
 
 			for {
-				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents)
+				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents, token_file, proxie_file)
 			}
 		}()
 	}
@@ -43,14 +45,14 @@ func send_requests() {
 	wg.Wait()
 }
 
-func sendRequest(url string, serverid string, contents string) {
-	proxy := getRandomProxy()
+func sendRequest(url string, serverid string, contents string, token_file string, proxie_file string) {
+	proxy := getRandomProxy(proxie_file)
 
 	headers := map[string]string{
 		"Accept":             "*/*",
 		"Accept-Encoding":    "gzip, deflate, br",
 		"Accept-Language":    "en-US",
-		"Authorization":      getRandomToken(),
+		"Authorization":      getRandomToken(token_file),
 		"Connection":         "keep-alive",
 		"Content-Type":       "application/json",
 		"Host":               "discord.com",
@@ -104,8 +106,8 @@ func sendRequest(url string, serverid string, contents string) {
 	}
 }
 
-func getRandomToken() string {
-	tokens := readTokensFromFile("token.txt")
+func getRandomToken(filepath string) string {
+	tokens := readTokensFromFile(filepath)
 	if len(tokens) == 0 {
 		fmt.Println("No tokens found in token.txt")
 		return ""
@@ -125,8 +127,8 @@ func readTokensFromFile(filename string) []string {
 	return strings.Fields(string(content))
 }
 
-func getRandomProxy() *url.URL {
-	proxies := readProxiesFromFile("proxies.txt")
+func getRandomProxy(filepath string) *url.URL {
+	proxies := readProxiesFromFile(filepath)
 	if len(proxies) == 0 {
 		fmt.Println("No proxies found in proxies.txt")
 		return nil
