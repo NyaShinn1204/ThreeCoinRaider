@@ -81,7 +81,7 @@ def spammer_thread(tokens, module_status, proxysetting, proxies, proxytype, allc
     content = contents
     if content == "":
         print("[-] メッセージが設定されていないので初期のメッセージを送信します")
-        content = "TwoCoinRaider On Top :skull:"
+        content = "ThreeCoinRaider On Top :skull:"
     if randomconvert == True:
         content = random_convert.random_convert(content)
     if allping == True:

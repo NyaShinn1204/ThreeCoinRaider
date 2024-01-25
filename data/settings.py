@@ -44,3 +44,34 @@ class Setting:
   validProxiesLabel.set("Valid: 000")
   invalidProxiesLabel = tk.StringVar()
   invalidProxiesLabel.set("Invalid: 000")
+  
+  
+  # normal spam
+  suc_nmspam_Label = tk.StringVar()
+  suc_nmspam_Label.set("Success: 000")
+  fai_nmspam_Label = tk.StringVar()
+  fai_nmspam_Label.set("Failed: 000")
+  
+  nmspam_allping = tk.BooleanVar()
+  nmspam_allping.set(False)
+  nmspam_allch = tk.BooleanVar()
+  nmspam_allch.set(False)
+  nmspam_rdstring = tk.BooleanVar()
+  nmspam_rdstring.set(False)
+  nmspam_ratefixer = tk.BooleanVar()
+  nmspam_ratefixer.set(False)
+  nmspam_randomconvert = tk.BooleanVar()
+  nmspam_randomconvert.set(False)
+  
+  nmspam_serverid = tk.StringVar()
+  nmspam_serverid.set("")
+  nmspam_channelid = tk.StringVar()
+  nmspam_channelid.set("")
+  
+  nmspam_delay = tk.DoubleVar()
+  nmspam_delay.set(0.1)
+  
+  
+class SettingVariable:
+  nmspamresult_success = 0
+  nmspamresult_failed = 0

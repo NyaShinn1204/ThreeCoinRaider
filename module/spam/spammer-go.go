@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 )
+import "os"
 
 func main() {
 	// main関数を記述
@@ -21,6 +22,9 @@ func main() {
 
 //export send_requests
 func send_requests() {
+	args := os.Args[1:]
+	channelid := args[0]
+
 	var wg sync.WaitGroup
 
 	for i := 0; i < 25; i++ {
@@ -29,7 +33,7 @@ func send_requests() {
 			defer wg.Done()
 
 			for {
-				sendRequest("https://discord.com/api/v9/channels/1189118504809529375/messages")
+				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid))
 			}
 		}()
 	}

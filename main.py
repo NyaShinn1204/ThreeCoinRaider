@@ -26,7 +26,7 @@ import data.icon as get_icon
 
 # Module Import
 
-import module.spam.spammer_go as module_spammer
+import module.spam.spammer_go as module_go_spammer
 import module.spam.spammer as module_normal_spammer
 #import module.joiner as module_joiner
 #import module.leaver as module_leaver
@@ -91,7 +91,7 @@ root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(data=get_icon.get_window_
 root.configure(bg="#fff")
 
 #import Variable
-from data.settings import Setting
+from data.settings import Setting, SettingVariable
 
 #Set language
 
@@ -223,21 +223,23 @@ def module_thread(num1, num2, num3):
   proxies = Setting.proxies
   proxytype = Setting.proxytype.get()
   proxysetting = Setting.proxy_enabled.get()
+  delay = 0.1
+  mentions = 20
   if num1 == 2:
     if num2 == 1:
       if num3 == 1:
-        serverid = str(Setting.spam_serverid.get())
-        channelid = str(Setting.spam_channelid.get())
-        allchannel = Setting.spam_allch.get()
-        allping = Setting.spam_allping.get()
-        randomstring = Setting.spam_rdstring.get()
-        ratelimit = Setting.spam_ratefixer.get()
-        randomconvert = Setting.spam_randomconvert.get()
+        serverid = str(Setting.nmspam_serverid.get())
+        channelid = str(Setting.nmspam_channelid.get())
+        allchannel = Setting.nmspam_allch.get()
+        allping = Setting.nmspam_allping.get()
+        randomstring = Setting.nmspam_rdstring.get()
+        ratelimit = Setting.nmspam_ratefixer.get()
+        randomconvert = Setting.nmspam_randomconvert.get()
     
-        contents = spam_message.get("0.0","end-1c")
-        mentions = Setting.delay99_02.get()
+        contents = nmspam_message.get("0.0","end-1c")
+        #mentions = Setting.delay99_02.get()
     
-        delay = Setting.delay02_01.get()
+        delay = Setting.nmspam_delay.get()
     
         if serverid == "":
           print("[-] ServerID is not set")
@@ -247,9 +249,40 @@ def module_thread(num1, num2, num3):
           return    
     
         threading.Thread(target=module_normal_spammer.start, args=(delay, tokens, module_status, proxysetting, proxies, proxytype, serverid, channelid, contents, allchannel, allping, mentions, randomstring, ratelimit, randomconvert)).start()
+        #threading.Thread(target=module_go_spammer.start, args=(channelid,)).start()
 
       if num3 == 2:
         threading.Thread(target=module_normal_spammer.stop).start()
+
+    if num2 == 2:
+      if num3 == 1:
+        channelid = str(Setting.gospam_channelid.get())
+        
+        delay = Setting.gospam_delay.get()
+    
+        if serverid == "":
+          print("[-] ServerID is not set")
+          return
+        if channelid == "":
+          print("[-] ChannelID is not set")
+          return    
+    
+        threading.Thread(target=module_go_spammer.start, args=(channelid,)).start()
+
+      if num3 == 2:
+        threading.Thread(target=module_go_spammer.stop).start()
+
+def module_status(num1, num2, num3):
+  if num1 == 2:
+    if num2 == 1:
+      if num3 == 1:
+        SettingVariable.nmspamresult_success +=1
+        Setting.suc_nmspam_Label.set("Success: "+str(SettingVariable.nmspamresult_success).zfill(3))
+      if num3 == 2:
+        SettingVariable.nmspamresult_failed +=1
+        Setting.fai_nmspam_Label.set("Failed: "+str(SettingVariable.nmspamresult_failed).zfill(3))
+
+
 
 def clear_frame(frame):
   for widget in frame.winfo_children():
@@ -258,6 +291,7 @@ def clear_frame(frame):
 
 def module_scroll_frame(num1, num2):
   global module_frame
+  global nmspam_message
   frame_scroll = module_frame = ctk.CTkScrollableFrame(root, fg_color=c2, bg_color=c2, width=1000, height=630)
   module_frame.place(x=245, y=70)
   clear_frame(frame_scroll)
@@ -276,32 +310,32 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Normal Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame02_01, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
       
-      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="All Ping").place(x=5,y=30)
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_allping, text="All Ping").place(x=5,y=30)
       test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
       test.place(x=80,y=30)
       CTkToolTip(test, delay=0.5, message="Add a Mention to a random user to the message to be spammed") 
-      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="All Ch").place(x=5,y=52)
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_allch, text="All Ch").place(x=5,y=52)
       test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
       test.place(x=70,y=52)
       CTkToolTip(test, delay=0.5, message="Randomly select channels to spam") 
-      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="Random String").place(x=5,y=74)
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_rdstring, text="Random String").place(x=5,y=74)
       test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
       test.place(x=120,y=74)
       CTkToolTip(test, delay=0.5, message="Adds a random string to the message to be spammed") 
-      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="RateLimitFixer").place(x=5,y=96)
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_ratefixer, text="RateLimitFixer").place(x=5,y=96)
       test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
       test.place(x=120,y=96)
       CTkToolTip(test, delay=0.5, message="Wait a few seconds if the rate limit is reached") 
-      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="RandomConvert").place(x=5,y=118)
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_randomconvert, text="RandomConvert").place(x=5,y=118)
       test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
       test.place(x=125,y=118)
       CTkToolTip(test, delay=0.5, message="Randomly converts messages to spam") 
       
       ctk.CTkButton(modules_frame02_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=146)
-      ctk.CTkEntry(modules_frame02_01, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20).place(x=85,y=146)
+      ctk.CTkEntry(modules_frame02_01, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.nmspam_serverid).place(x=85,y=146)
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=144)
       ctk.CTkButton(modules_frame02_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=175)
-      ctk.CTkEntry(modules_frame02_01, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20).place(x=85,y=175)
+      ctk.CTkEntry(modules_frame02_01, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.nmspam_channelid).place(x=85,y=175)
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=173)
       #      ctk.CTkEntry(modules_frame10_03, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=33)
 
@@ -309,21 +343,76 @@ def module_scroll_frame(num1, num2):
       CTkLabel(modules_frame02_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=197)
       def show_value02_01(value):
           tooltip02_01.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame02_01, from_=0.1, to=3.0, command=show_value02_01)
+      test = ctk.CTkSlider(modules_frame02_01, from_=0.1, to=3.0, variable=Setting.nmspam_delay, command=show_value02_01)
       test.place(x=5,y=222)
-      tooltip02_01 = CTkToolTip(test, message=round(1))
+      tooltip02_01 = CTkToolTip(test, message=round(Setting.nmspam_delay.get(), 1))
 
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
-      spam_message = ctk.CTkTextbox(modules_frame02_01, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
-      spam_message.place(x=150,y=55)
+      nmspam_message = ctk.CTkTextbox(modules_frame02_01, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
+      nmspam_message.place(x=150,y=55)
         
       ctk.CTkButton(modules_frame02_01, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 1, 1)).place(x=5,y=245)
       ctk.CTkButton(modules_frame02_01, text="Stop", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 1, 2)).place(x=70,y=245)
 
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Status", font=("Roboto", 12)).place(x=330,y=144)
-      tk.Label(modules_frame02_01, bg=c13, fg="#fff", font=("Roboto", 12)).place(x=335,y=169)
-      tk.Label(modules_frame02_01, bg=c13, fg="#fff", font=("Roboto", 12)).place(x=335,y=194)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", textvariable=Setting.suc_nmspam_Label, font=("Roboto", 12)).place(x=335,y=169)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", textvariable=Setting.fai_nmspam_Label, font=("Roboto", 12)).place(x=335,y=194)
         
+      
+      # Frame Number 02_02
+      modules_frame02_02 = ctk.CTkFrame(module_frame, width=470, height=300, border_width=0, fg_color=c13)
+      modules_frame02_02.grid(row=0, column=1, padx=6, pady=6)
+      tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Go Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Canvas(modules_frame02_02, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+      
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_allping, text="All Ping").place(x=5,y=30)
+      test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
+      test.place(x=80,y=30)
+      CTkToolTip(test, delay=0.5, message="Add a Mention to a random user to the message to be spammed") 
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_allch, text="All Ch").place(x=5,y=52)
+      test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
+      test.place(x=70,y=52)
+      CTkToolTip(test, delay=0.5, message="Randomly select channels to spam") 
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_rdstring, text="Random String").place(x=5,y=74)
+      test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
+      test.place(x=120,y=74)
+      CTkToolTip(test, delay=0.5, message="Adds a random string to the message to be spammed") 
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_ratefixer, text="RateLimitFixer").place(x=5,y=96)
+      test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
+      test.place(x=120,y=96)
+      CTkToolTip(test, delay=0.5, message="Wait a few seconds if the rate limit is reached") 
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.nmspam_randomconvert, text="RandomConvert").place(x=5,y=118)
+      test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
+      test.place(x=125,y=118)
+      CTkToolTip(test, delay=0.5, message="Randomly converts messages to spam") 
+      
+      ctk.CTkButton(modules_frame02_02, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=146)
+      ctk.CTkEntry(modules_frame02_02, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.nmspam_serverid).place(x=85,y=146)
+      tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=144)
+      ctk.CTkButton(modules_frame02_02, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=175)
+      ctk.CTkEntry(modules_frame02_02, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.nmspam_channelid).place(x=85,y=175)
+      tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=173)
+      #      ctk.CTkEntry(modules_frame10_03, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=33)
+
+
+      CTkLabel(modules_frame02_02, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=197)
+      def show_value02_01(value):
+          tooltip02_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_02, from_=0.1, to=3.0, variable=Setting.nmspam_delay, command=show_value02_01)
+      test.place(x=5,y=222)
+      tooltip02_01 = CTkToolTip(test, message=round(Setting.nmspam_delay.get(), 1))
+
+      tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
+      nmspam_message = ctk.CTkTextbox(modules_frame02_02, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
+      nmspam_message.place(x=150,y=55)
+        
+      ctk.CTkButton(modules_frame02_02, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 1, 1)).place(x=5,y=245)
+      ctk.CTkButton(modules_frame02_02, text="Stop", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 1, 2)).place(x=70,y=245)
+
+      tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Status", font=("Roboto", 12)).place(x=330,y=144)
+      tk.Label(modules_frame02_02, bg=c13, fg="#fff", textvariable=Setting.suc_nmspam_Label, font=("Roboto", 12)).place(x=335,y=169)
+      tk.Label(modules_frame02_02, bg=c13, fg="#fff", textvariable=Setting.fai_nmspam_Label, font=("Roboto", 12)).place(x=335,y=194)        
+
       printl("debug", "Open Spammer Tab")
       #threading.Thread(target=module_spammer.start).start()
         
