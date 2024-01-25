@@ -80,6 +80,7 @@ c9 = "#454c7f"
 c10 = "#2D2DA0"
 c11 = "#041432"
 c12 = "#3a88e3"
+c13 = "#010b32"
 
 root = tk.Tk()
 root.geometry("1280x720")
@@ -229,17 +230,75 @@ def module_scroll_frame(num1, num2):
   clear_frame(frame_scroll)
   if num1 == 1:
     if num2 == 1:
+      # Join Leave
   
       printl("debug", "Open Join Leave Tab")
       #threading.Thread(target=module_spammer.stop).start()
         
     if num2 == 2:
+      # Spammer
+      # Frame Number 02_01
+      modules_frame02_01 = ctk.CTkFrame(module_frame, width=470, height=300, border_width=0, fg_color=c13)
+      modules_frame02_01.grid(row=0, column=0, padx=6, pady=6)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Canvas(modules_frame02_01, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+      
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="All Ping").place(x=5,y=30)
+      test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
+      test.place(x=80,y=30)
+      CTkToolTip(test, delay=0.5, message="Add a Mention to a random user to the message to be spammed") 
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="All Ch").place(x=5,y=52)
+      test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
+      test.place(x=70,y=52)
+      CTkToolTip(test, delay=0.5, message="Randomly select channels to spam") 
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="Random String").place(x=5,y=74)
+      test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
+      test.place(x=120,y=74)
+      CTkToolTip(test, delay=0.5, message="Adds a random string to the message to be spammed") 
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="RateLimitFixer").place(x=5,y=96)
+      test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
+      test.place(x=120,y=96)
+      CTkToolTip(test, delay=0.5, message="Wait a few seconds if the rate limit is reached") 
+      ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="RandomConvert").place(x=5,y=118)
+      test = ctk.CTkLabel(modules_frame02_01, text_color="#fff", text="(?)")
+      test.place(x=125,y=118)
+      CTkToolTip(test, delay=0.5, message="Randomly converts messages to spam") 
+      
+      ctk.CTkButton(modules_frame02_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=146)
+      ctk.CTkEntry(modules_frame02_01, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20).place(x=85,y=146)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=144)
+      ctk.CTkButton(modules_frame02_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=175)
+      ctk.CTkEntry(modules_frame02_01, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20).place(x=85,y=175)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=173)
+      #      ctk.CTkEntry(modules_frame10_03, bg_color="#010b32", fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, state="disabled").place(x=85,y=33)
+
+
+      CTkLabel(modules_frame02_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=197)
+      def show_value02_01(value):
+          tooltip02_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_01, from_=0.1, to=3.0, command=show_value02_01)
+      test.place(x=5,y=222)
+      tooltip02_01 = CTkToolTip(test, message=round(1))
+
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
+      spam_message = ctk.CTkTextbox(modules_frame02_01, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
+      spam_message.place(x=150,y=55)
+        
+      #ctk.CTkButton(modules_frame02_01, text="Start", fg_color=c2, hover_color=c5, border_width=1, border_color=c3, width=60, height=25).place(x=5,y=245)
+      #ctk.CTkButton(modules_frame02_01, text="Stop", fg_color=c2, hover_color=c5, border_width=1, border_color=c3, width=60, height=25).place(x=70,y=245)
+      ctk.CTkButton(modules_frame02_01, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25).place(x=5,y=245)
+      ctk.CTkButton(modules_frame02_01, text="Stop", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25).place(x=70,y=245)
+
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Status", font=("Roboto", 12)).place(x=330,y=144)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", font=("Roboto", 12)).place(x=335,y=169)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", font=("Roboto", 12)).place(x=335,y=194)
         
       printl("debug", "Open Spammer Tab")
       #threading.Thread(target=module_spammer.start).start()
         
   if num1 == 2:
     if num2 == 1:
+      # Setting
       # Frame Number 10_01
       modules_frame10_01 = ctk.CTkFrame(module_frame, width=470, height=210, border_width=0, fg_color="#010b32")
       modules_frame10_01.grid(row=0, column=0, padx=6, pady=6)
@@ -311,6 +370,7 @@ def module_scroll_frame(num1, num2):
       printl("debug", "Open Setting Tab")
         
     if num2 == 2:
+      # About
       credits_frame = ctk.CTkFrame(module_frame, width=940, height=400, border_width=0, fg_color=c2)
       credits_frame.grid(row=1, column=1, padx=6, pady=6)
       tk.Label(credits_frame, bg=c2, fg=c8, text="ThreeCoinRaider github:", font=("Roboto", 12)).place(x=0,y=0)
