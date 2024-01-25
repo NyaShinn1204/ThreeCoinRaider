@@ -27,6 +27,7 @@ import data.icon as get_icon
 # Module Import
 
 import module.spam.spammer_go as module_spammer
+import module.spam.spammer as module_normal_spammer
 #import module.joiner as module_joiner
 #import module.leaver as module_leaver
 #import module.spam.spammer as module_spammer
@@ -217,6 +218,38 @@ def update_proxy(status, proxy):
     Setting.invaildproxies += 1
     Setting.invalidProxiesLabel.set("Invalid: "+str(Setting.invaildproxies).zfill(3))
 
+def module_thread(num1, num2, num3):
+  tokens = Setting.tokens
+  proxies = Setting.proxies
+  proxytype = Setting.proxytype.get()
+  proxysetting = Setting.proxy_enabled.get()
+  if num1 == 2:
+    if num2 == 1:
+      if num3 == 1:
+        serverid = str(Setting.spam_serverid.get())
+        channelid = str(Setting.spam_channelid.get())
+        allchannel = Setting.spam_allch.get()
+        allping = Setting.spam_allping.get()
+        randomstring = Setting.spam_rdstring.get()
+        ratelimit = Setting.spam_ratefixer.get()
+        randomconvert = Setting.spam_randomconvert.get()
+    
+        contents = spam_message.get("0.0","end-1c")
+        mentions = Setting.delay99_02.get()
+    
+        delay = Setting.delay02_01.get()
+    
+        if serverid == "":
+          print("[-] ServerID is not set")
+          return
+        if channelid == "":
+          print("[-] ChannelID is not set")
+          return    
+    
+        threading.Thread(target=module_normal_spammer.start, args=(delay, tokens, module_status, proxysetting, proxies, proxytype, serverid, channelid, contents, allchannel, allping, mentions, randomstring, ratelimit, randomconvert)).start()
+
+      if num3 == 2:
+        threading.Thread(target=module_normal_spammer.stop).start()
 
 def clear_frame(frame):
   for widget in frame.winfo_children():
@@ -240,7 +273,7 @@ def module_scroll_frame(num1, num2):
       # Frame Number 02_01
       modules_frame02_01 = ctk.CTkFrame(module_frame, width=470, height=300, border_width=0, fg_color=c13)
       modules_frame02_01.grid(row=0, column=0, padx=6, pady=6)
-      tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Normal Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame02_01, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
       
       ctk.CTkCheckBox(modules_frame02_01, bg_color=c13, text_color="#fff", border_color=c4, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="All Ping").place(x=5,y=30)
@@ -284,10 +317,8 @@ def module_scroll_frame(num1, num2):
       spam_message = ctk.CTkTextbox(modules_frame02_01, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
       spam_message.place(x=150,y=55)
         
-      #ctk.CTkButton(modules_frame02_01, text="Start", fg_color=c2, hover_color=c5, border_width=1, border_color=c3, width=60, height=25).place(x=5,y=245)
-      #ctk.CTkButton(modules_frame02_01, text="Stop", fg_color=c2, hover_color=c5, border_width=1, border_color=c3, width=60, height=25).place(x=70,y=245)
-      ctk.CTkButton(modules_frame02_01, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25).place(x=5,y=245)
-      ctk.CTkButton(modules_frame02_01, text="Stop", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25).place(x=70,y=245)
+      ctk.CTkButton(modules_frame02_01, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 1, 1)).place(x=5,y=245)
+      ctk.CTkButton(modules_frame02_01, text="Stop", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 1, 2)).place(x=70,y=245)
 
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Status", font=("Roboto", 12)).place(x=330,y=144)
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", font=("Roboto", 12)).place(x=335,y=169)
