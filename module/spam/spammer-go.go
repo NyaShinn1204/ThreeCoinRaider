@@ -10,11 +10,11 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
-import "strconv"
 
 func main() {
 	// main関数を記述
