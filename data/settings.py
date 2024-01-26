@@ -83,6 +83,9 @@ class Setting:
   gospam_channelid = tk.StringVar()
   gospam_channelid.set("")
   
+  gospam_threads = tk.DoubleVar()
+  gospam_threads.set(25)
+  
 class SettingVariable:
   nmspamresult_success = 0
   nmspamresult_failed = 0

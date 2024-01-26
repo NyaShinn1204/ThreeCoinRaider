@@ -270,6 +270,7 @@ def module_thread(num1, num2, num3):
         channelid = str(Setting.gospam_channelid.get())
         
         contents = gospam_message.get("0.0","end-1c")
+        threads = round(Setting.gospam_threads.get())
             
         #if serverid == "":
         #  print("[-] ServerID is not set")
@@ -278,7 +279,7 @@ def module_thread(num1, num2, num3):
           print("[-] ChannelID is not set")
           return    
     
-        threading.Thread(target=module_go_spammer.start, args=(token_file, proxie_file, module_status, serverid, channelid, contents)).start()
+        threading.Thread(target=module_go_spammer.start, args=(token_file, proxie_file, module_status, serverid, channelid, contents, threads)).start()
 
       if num3 == 2:
         threading.Thread(target=module_go_spammer.stop).start()
@@ -388,6 +389,14 @@ def module_scroll_frame(num1, num2):
       ctk.CTkButton(modules_frame02_02, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=175)
       ctk.CTkEntry(modules_frame02_02, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.gospam_channelid).place(x=85,y=175)
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=173)
+
+
+      CTkLabel(modules_frame02_02, text_color="#fff", text="Threads", font=("Roboto", 15)).place(x=5,y=197)
+      def show_value02_02(value):
+          tooltip02_02.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_threads, command=show_value02_02)
+      test.place(x=5,y=222)
+      tooltip02_02 = CTkToolTip(test, message=round(Setting.gospam_threads.get()))
 
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=5,y=30)
       gospam_message = ctk.CTkTextbox(modules_frame02_02, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)

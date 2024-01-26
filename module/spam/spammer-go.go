@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 )
+import "strconv"
 
 func main() {
 	// main関数を記述
@@ -28,10 +29,18 @@ func send_requests() {
 	contents := args[2]
 	token_file := args[3]
 	proxie_file := args[4]
+	threads_str := args[5]
+	threads, err := strconv.Atoi(threads_str)
+
+	if err != nil {
+		// エラー処理: 文字列を整数に変換できない場合の処理を追加してください
+		fmt.Println("threadsの変換に失敗しました:", err)
+		return
+	}
 
 	var wg sync.WaitGroup
 
-	for i := 0; i < 25; i++ {
+	for i := 0; i < threads; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
