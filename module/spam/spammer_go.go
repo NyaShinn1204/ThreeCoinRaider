@@ -17,12 +17,6 @@ import (
 )
 
 func main() {
-	// main関数を記述
-	send_requests()
-}
-
-//export send_requests
-func send_requests() {
 	args := os.Args[1:]
 	serverid := args[0]
 	channelid := args[1]
