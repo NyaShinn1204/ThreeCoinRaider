@@ -44,7 +44,8 @@ import module.proxy_checker as proxy_checker
 
 # Bypass Module Import
 #import bypass.solver.solver as solver
-#import bypass.solver.get_balance as get_balance
+import module.joiner.utilities.get_balance as get_balance
+
 version = "1.0.0"
 theme = "twocoin"
 developer = "NyaShinn1204"
@@ -317,6 +318,75 @@ def module_scroll_frame(num1, num2):
   if num1 == 1:
     if num2 == 1:
       # Join Leave
+      # Frame Number 01_01
+      def hcaptcha_select():
+        global answers, api
+        if Setting.joiner_bypasscap.get() == True:
+          answers = ctk.CTkInputDialog(text = "Select Sovler\n1, CapSolver\n2, CapMonster\n3, 2Cap\n4, Anti-Captcha").get_input()
+          if answers in ['1','2','3','4']:
+            print("[+] Select " + answers)
+            api = ctk.CTkInputDialog(text = "Input API Key").get_input()
+            if api == "":
+              print("[-] Not Set. Please Input")
+              Setting.joiner_bypasscap.set(False)
+            else:
+              print("[~] Checking API Key: " + extractfi(api))
+              if answers == "1":
+                if get_balance.get_balance_capsolver(api) == 0.0:
+                  Setting.joiner_bypasscap.set(False)
+              if answers == "2":
+                if get_balance.get_balance_capmonster(api) == 0.0:
+                  Setting.joiner_bypasscap.set(False)
+              if answers == "3":
+                if get_balance.get_balance_2cap(api) == 0.0:
+                  Setting.joiner_bypasscap.set(False)
+              if answers == "4":
+                if get_balance.get_balance_anticaptcha(api) == 0.0:
+                  Setting.joiner_bypasscap.set(False)
+          else:
+            print("[-] Not Set. Please Input")
+            Setting.joiner_bypasscap.set(False)
+
+      modules_frame01_01 = ctk.CTkFrame(module_frame, width=470, height=275, border_width=0, fg_color=c13)
+      modules_frame01_01.grid(row=0, column=0, padx=6, pady=6)
+      tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Joiner", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Canvas(modules_frame01_01, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+      
+      ctk.CTkCheckBox(modules_frame01_01, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="Bypass MemberScreen", variable=Setting.joiner_bypassms).place(x=5,y=31)
+      test = ctk.CTkLabel(modules_frame01_01, text_color="#fff", text="(?)")
+      test.place(x=170,y=31)
+      CTkToolTip(test, delay=0.5, message="Bypass the member screen when you join.") 
+      ctk.CTkCheckBox(modules_frame01_01, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="Bypass hCaptcha", variable=Setting.joiner_bypasscap, command=hcaptcha_select).place(x=5,y=55) 
+      test = ctk.CTkLabel(modules_frame01_01, text_color="#fff", text="(?)")
+      test.place(x=140,y=55)
+      CTkToolTip(test, delay=0.5, message="Automatically resolve hcaptcha")
+      ctk.CTkCheckBox(modules_frame01_01, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, text="Delete Join Message", variable=Setting.joiner_deletems).place(x=5,y=79)
+      test = ctk.CTkLabel(modules_frame01_01, text_color="#fff", text="(?)")
+      test.place(x=160,y=79)
+      CTkToolTip(test, delay=0.5, message="Delete the message when you join") 
+      
+      ctk.CTkButton(modules_frame01_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: Setting.joiner_link.set("")).place(x=5,y=109)
+      ctk.CTkEntry(modules_frame01_01, bg_color=c13, fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.joiner_link).place(x=85,y=109)
+      tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Invite Link", font=("Roboto", 12)).place(x=240,y=107)
+      ctk.CTkButton(modules_frame01_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: Setting.joiner_serverid.set("")).place(x=5,y=138)
+      ctk.CTkEntry(modules_frame01_01, bg_color=c13, fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.joiner_serverid).place(x=85,y=138)
+      tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=136)
+      ctk.CTkButton(modules_frame01_01, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: Setting.joiner_channelid.set("")).place(x=5,y=167)
+      ctk.CTkEntry(modules_frame01_01, bg_color=c13, fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.joiner_channelid).place(x=85,y=167)
+      tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=165)
+
+      CTkLabel(modules_frame01_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=192)
+      def show_value01_01(value):
+          tooltip01_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame01_01, from_=0.1, to=3.0, variable=Setting.joiner_delay, command=show_value01_01)
+      test.place(x=5,y=217)
+      tooltip01_01 = CTkToolTip(test, message=round(Setting.joiner_delay.get(), 1))
+
+      ctk.CTkButton(modules_frame01_01, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1_1_1)).place(x=5,y=237)
+
+      tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Join Status", font=("Roboto", 12)).place(x=205,y=190)
+      tk.Label(modules_frame01_01, bg=c13, fg="#fff", textvariable=Setting.suc_joiner_Label, font=("Roboto", 12)).place(x=210,y=215)
+      tk.Label(modules_frame01_01, bg=c13, fg="#fff", textvariable=Setting.fai_joiner_Label, font=("Roboto", 12)).place(x=210,y=240)
   
       printl("debug", "Open Join Leave Tab")
               
@@ -386,7 +456,7 @@ def module_scroll_frame(num1, num2):
     
       ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.gospam_allch, text="All Ch").place(x=5,y=30)
       test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
-      test.place(x=80,y=30)
+      test.place(x=70,y=30)
       CTkToolTip(test, delay=0.5, message="Randomly select channels to spam") 
       
       ctk.CTkButton(modules_frame02_02, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=146)

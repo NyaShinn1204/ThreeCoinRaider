@@ -46,6 +46,28 @@ class Setting:
   invalidProxiesLabel.set("Invalid: 000")
   
   
+  # joiner
+  suc_joiner_Label = tk.StringVar()
+  suc_joiner_Label.set("Success: 000")
+  fai_joiner_Label = tk.StringVar()
+  fai_joiner_Label.set("Failed: 000")
+  
+  joiner_link = tk.StringVar()
+  joiner_link.set("")
+  joiner_bypassms = tk.BooleanVar()
+  joiner_bypassms.set(False)
+  joiner_bypasscap = tk.BooleanVar()
+  joiner_bypasscap.set(False)
+  joiner_deletems = tk.BooleanVar()
+  joiner_deletems.set("False")
+  joiner_serverid = tk.StringVar()
+  joiner_serverid.set("")
+  joiner_channelid = tk.StringVar()
+  joiner_channelid.set("")
+  
+  joiner_delay = tk.DoubleVar()
+  joiner_delay.set(0.1)  
+  
   # normal spam
   suc_nmspam_Label = tk.StringVar()
   suc_nmspam_Label.set("Success: 000")
