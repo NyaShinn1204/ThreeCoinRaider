@@ -77,6 +77,9 @@ class Setting:
   suc_gospam_Label.set("Success: 000")
   fai_gospam_Label = tk.StringVar()
   fai_gospam_Label.set("Failed: 000")  
+  
+  gospam_allch = tk.BooleanVar()
+  gospam_allch.set(False)
 
   gospam_serverid = tk.StringVar()
   gospam_serverid.set("")

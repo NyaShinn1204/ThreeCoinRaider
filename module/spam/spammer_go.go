@@ -16,15 +16,25 @@ import (
 	"time"
 )
 
+var channelid string
+var contents string
+var token_file string
+var proxie_file string
+var threads_str string
+var allchannel string
+
 func main() {
 	args := os.Args[1:]
 	serverid := args[0]
-	channelid := args[1]
-	contents := args[2]
-	token_file := args[3]
-	proxie_file := args[4]
-	threads_str := args[5]
+	channelid = args[1]
+	contents = args[2]
+	token_file = args[3]
+	proxie_file = args[4]
+	threads_str = args[5]
 	threads, err := strconv.Atoi(threads_str)
+	allchannel = args[6]
+
+	channels, err := getChannels(getRandomToken(token_file), serverid)
 
 	if err != nil {
 		// エラー処理: 文字列を整数に変換できない場合の処理を追加してください
@@ -40,6 +50,13 @@ func main() {
 			defer wg.Done()
 
 			for {
+				if allchannel == "True" {
+					randomchannel, err := chooseRandomChannel(channels)
+					if err != nil {
+						fmt.Println("Error:", err)
+					}
+					channelid = randomchannel
+				}
 				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents, token_file, proxie_file)
 			}
 		}()
@@ -97,15 +114,17 @@ func sendRequest(url string, serverid string, contents string, token_file string
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Request error:", err)
+		//fmt.Println("Request error:", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 200 {
-		fmt.Println("Success:", resp.StatusCode, proxy)
+		fmt.Println("Success:", channelid, resp.StatusCode, proxy)
+		//fmt.Println("[+] 送信に成功しました ChannelID:", channelid)
 	} else {
-		fmt.Println("Failed:", resp.StatusCode, proxy)
+		//fmt.Println("[-] 送信に失敗しました ChannelID:", channelid)
+		fmt.Println("Failed:", channelid, resp.StatusCode, proxy)
 	}
 }
 
@@ -164,4 +183,83 @@ func readProxiesFromFile(filename string) []*url.URL {
 	}
 
 	return proxyList
+}
+
+func getChannels(token string, guildID string) ([]string, error) {
+	var channels []string
+
+	for {
+		url := fmt.Sprintf("https://discord.com/api/v9/guilds/%s/channels", guildID)
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("authorization", token)
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		if resp.StatusCode == 200 {
+			var data []map[string]interface{}
+			err := json.Unmarshal(body, &data)
+			if err != nil {
+				return nil, err
+			}
+
+			//fmt.Println(resp.StatusCode)
+
+			for _, channel := range data {
+				channelType, ok := channel["type"].(float64)
+				if !ok {
+					return nil, fmt.Errorf("Failed to parse channel type")
+				}
+
+				if channelType == 0 || channelType == 2 {
+					channelID, ok := channel["id"].(string)
+					if !ok {
+						return nil, fmt.Errorf("Failed to parse channel id")
+					}
+
+					if !contains(channels, channelID) {
+						channels = append(channels, channelID)
+					}
+				}
+			}
+
+			return channels, nil
+		} else {
+			fmt.Println(token)
+			fmt.Println(resp.StatusCode)
+			return nil, fmt.Errorf("Request failed with status code: %d", resp.StatusCode)
+		}
+	}
+}
+
+func contains(slice []string, element string) bool {
+	for _, e := range slice {
+		if e == element {
+			return true
+		}
+	}
+	return false
+}
+
+func chooseRandomChannel(channels []string) (string, error) {
+	if len(channels) == 0 {
+		return "", fmt.Errorf("No channels available")
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	index := rand.Intn(len(channels))
+	return channels[index], nil
 }
