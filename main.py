@@ -26,9 +26,9 @@ import data.icon as get_icon
 
 # Module Import
 
+import module.joiner.joiner as module_joiner
 import module.spam.spammer_go as module_go_spammer
 import module.spam.spammer as module_normal_spammer
-#import module.joiner as module_joiner
 #import module.leaver as module_leaver
 #import module.spam.spammer as module_spammer
 #import module.vc_join as module_vc_join
@@ -230,6 +230,51 @@ def module_thread(num1, num2, num3):
   proxysetting = Setting.proxy_enabled.get()
   delay = 0.1
   mentions = 20
+  
+  if num1 == 1:
+    if num2 == 1:
+      if num3 == 1:
+        serverid = str(Setting.joiner_serverid.get())
+        join_channelid = str(Setting.joiner_channelid.get())
+        invitelink = str(Setting.joiner_link.get())
+        memberscreen = Setting.joiner_bypassms.get()
+        delete_joinms = Setting.joiner_deletems.get()
+        bypasscaptcha = Setting.joiner_bypasscap.get()
+    
+        delay = Setting.joiner_deletems.get()
+    
+        answers = None
+        api = None
+    
+        if invitelink == "":
+          print("[-] InviteLink is not set")
+          return
+        if invitelink.__contains__('discord.gg/'):
+          invitelink = invitelink.replace('discord.gg/', '').replace('https://', '').replace('http://', '')
+        elif invitelink.__contains__('discord.com/invite/'):
+          invitelink = invitelink.replace('discord.com/invite/', '').replace('https://', '').replace('http://', '')
+        try:
+          invitelink = invitelink.split(".gg/")[1]
+        except:
+          pass
+        if memberscreen == True:
+          if serverid == "":
+            print("[-] ServerID is not set")
+          else:
+            print("[-] このオプションは非推奨です")
+        if bypasscaptcha == True:
+          if answers == "":
+            print("[-] Please Select API Service")
+            return
+          else:
+            if api == "":
+              print("[-] Please Input API Keys")
+        if delete_joinms == True:
+          if join_channelid == "":
+            print("[-] Join ChannelID is not set")
+            return
+    
+        threading.Thread(target=module_joiner.start, args=(tokens, serverid, invitelink, memberscreen, delay, module_status, answers, api, bypasscaptcha, delete_joinms, join_channelid)).start()
   if num1 == 2:
     if num2 == 1:
       if num3 == 1:
@@ -287,6 +332,14 @@ def module_thread(num1, num2, num3):
         threading.Thread(target=module_go_spammer.stop).start()
 
 def module_status(num1, num2, num3):
+  if num1 == 1:
+    if num2 == 1:
+      if num3 == 1:
+        SettingVariable.joinerresult_success +=1
+        Setting.suc_joiner_Label.set("Success: "+str(SettingVariable.joinerresult_success).zfill(3))
+      if num3 == 2:
+        SettingVariable.joinerresult_failed +=1
+        Setting.fai_joiner_Label.set("Failed: "+str(SettingVariable.joinerresult_failed).zfill(3))
   if num1 == 2:
     if num2 == 1:
       if num3 == 1:
@@ -382,7 +435,7 @@ def module_scroll_frame(num1, num2):
       test.place(x=5,y=217)
       tooltip01_01 = CTkToolTip(test, message=round(Setting.joiner_delay.get(), 1))
 
-      ctk.CTkButton(modules_frame01_01, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1_1_1)).place(x=5,y=237)
+      ctk.CTkButton(modules_frame01_01, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 1, 1)).place(x=5,y=237)
 
       tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Join Status", font=("Roboto", 12)).place(x=205,y=190)
       tk.Label(modules_frame01_01, bg=c13, fg="#fff", textvariable=Setting.suc_joiner_Label, font=("Roboto", 12)).place(x=210,y=215)

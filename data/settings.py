@@ -112,6 +112,8 @@ class Setting:
   gospam_threads.set(25)
   
 class SettingVariable:
+  joinerresult_success = 0
+  joinerresult_failed = 0
   nmspamresult_success = 0
   nmspamresult_failed = 0
   gospamresult_success = 0
