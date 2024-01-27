@@ -114,7 +114,7 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                     if memberscreen == True:
                         accept_rules_bypass(token, joinreq.json(), joinreq.json()["guild"]["id"])
                     if changenick == True:
-                        delete_join_msg(token, joinreq.json()["guild"]["id"], "みけねこ的うるはるしあ")
+                        change_nicker(token, joinreq.json()["guild"]["id"], "みけねこ的うるはるしあ")
                 else:
                     printl("error", f"{pretty}Failed Captcha Bypass {gray}| " + Fore.CYAN + extract_token + Fore.RESET+ " | " + newresponse.text.replace("\n", ""))
             else:
@@ -133,7 +133,7 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                 printl("info", f"{pretty}Successfully Token Join {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
                 if delete_joinms == True:
                     printl("info", f"{pretty}Deleting Join Message {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                    delete_joinms(token, headers, join_channelid)
+                    delete_join_msg(token, headers, join_channelid)
                 module_status(1, 1, 1)
             if memberscreen == True:
                 accept_rules_bypass(token, joinreq.json(), joinreq.json()["guild"]["id"])

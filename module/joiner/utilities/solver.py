@@ -6,8 +6,6 @@ import colorama
 
 from colorama import Fore
 
-colorama.init(autoreset=True)
-
 import module.joiner.utilities.solver as get_balance
 
 def extract(format_token):
