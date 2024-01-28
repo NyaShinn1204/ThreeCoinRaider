@@ -39,13 +39,16 @@ def extract(format_token):
         token = format_token
     return token
 
-def accept_rules_bypass(token, requests, serverid):
+def accept_rules_bypass(token, requests, serverid, invitelink):
+    printl("error", "use to Lock Token :warning:")
+    return
     extract_token = f"{extract(token+']').split('.')[0]}.{extract(token+']').split('.')[1]}"
     session = header.get_session.get_session()
     req_header = header.request_header(token)
     headers = req_header
+    print(requests)
     if 'show_verification_form' in requests:
-        bypass_rules = session.get(f"https://discord.com/api/v9/guilds/{serverid}/member-verification?with_guild=false", headers=headers).json()
+        bypass_rules = session.get(f"https://discord.com/api/v9/guilds/{serverid}/member-verification?with_guild=false&invite_code={invitelink}", headers=headers).json()
         accept_rules = session.get(f"https://discord.com/api/v9/guilds/{serverid}/requests/@me", headers=headers, json=bypass_rules)
         if accept_rules.status_code == 201 or accept_rules.status_code == 204:
             printl("info", f"{pretty}Success MemberBypass {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
@@ -112,9 +115,9 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                             delete_join_msg(token, join_channelid)
                         module_status(1, 1, 1)
                     if memberscreen == True:
-                        accept_rules_bypass(token, joinreq.json(), joinreq.json()["guild"]["id"])
+                        accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
                     if changenick == True:
-                        change_nicker(token, joinreq.json()["guild"]["id"], "みけねこ的うるはるしあ")
+                        change_nicker(token, serverid, "みけねこ的うるはるしあ")
                 else:
                     printl("error", f"{pretty}Failed Captcha Bypass {gray}| " + Fore.CYAN + extract_token + Fore.RESET+ " | " + newresponse.text.replace("\n", ""))
             else:
@@ -136,9 +139,9 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                     delete_join_msg(token, headers, join_channelid)
                 module_status(1, 1, 1)
             if memberscreen == True:
-                accept_rules_bypass(token, joinreq.json(), joinreq.json()["guild"]["id"])
+                accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
             if changenick == True:
-                delete_join_msg(token, joinreq.json()["guild"]["id"], "みけねこ的うるはるしあ")
+                delete_join_msg(token, serverid, "みけねこ的うるはるしあ")
     except Exception as err:
         print(f"[-] ERROR: {err} ")
         return
