@@ -40,7 +40,7 @@ def extract(format_token):
     return token
 
 def accept_rules_bypass(token, requests, serverid, invitelink):
-    printl("error", "use to Lock Token :warning:")
+    printl("error", "Fuck!! Fucking Discord!! Using this will lock the account!")
     return
     extract_token = f"{extract(token+']').split('.')[0]}.{extract(token+']').split('.')[1]}"
     session = header.get_session.get_session()
