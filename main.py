@@ -114,17 +114,17 @@ Setting.language_variable.set(lang_load[language]["name"])
 def get_hwid():
   try:
     if os.name == 'posix':
-      uuid = "Linux unsupported"
+      cmd = 'cat /etc/machine-id'
+      uuid = subprocess.check_output(cmd,shell=True)
+      uuid = uuid[:-1].decode('utf-8')
       return uuid
-    else:
-      cmd = 'wmic csproduct get uuid'
-      uuid = str(subprocess.check_output(cmd))
-      pos1 = uuid.find("\\n")+2
-      uuid = uuid[pos1:-15]
+    if os.name == 'nt':
+      cmd = 'powershell -Command (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID'
+      uuid = subprocess.run(cmd, capture_output=True, text=True, shell=True)
+      uuid = uuid.stdout.strip()
       return uuid
   except:
     printl("error", "get_hwid error wrong")
-
 
 # load Check Def
 def check_config():
