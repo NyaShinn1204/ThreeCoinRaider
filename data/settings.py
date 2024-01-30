@@ -68,6 +68,18 @@ class Setting:
   joiner_delay = tk.DoubleVar()
   joiner_delay.set(0.1)  
   
+  # leaver
+  suc_leaver_Label = tk.StringVar()
+  suc_leaver_Label.set("Success: 000")
+  fai_leaver_Label = tk.StringVar()
+  fai_leaver_Label.set("Failed: 000")
+  
+  leaver_serverid = tk.StringVar()
+  leaver_serverid.set("")
+
+  leaver_delay = tk.DoubleVar()
+  leaver_delay.set(0.1)  
+
   # normal spam
   suc_nmspam_Label = tk.StringVar()
   suc_nmspam_Label.set("Success: 000")
@@ -114,6 +126,8 @@ class Setting:
 class SettingVariable:
   joinerresult_success = 0
   joinerresult_failed = 0
+  leaverresult_success = 0
+  leaverresult_failed = 0
   nmspamresult_success = 0
   nmspamresult_failed = 0
   gospamresult_success = 0

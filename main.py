@@ -27,6 +27,7 @@ import data.icon as get_icon
 # Module Import
 
 import module.joiner.joiner as module_joiner
+import module.leaver as module_leaver
 import module.spam.spammer_go as module_go_spammer
 import module.spam.spammer as module_normal_spammer
 #import module.leaver as module_leaver
@@ -275,6 +276,22 @@ def module_thread(num1, num2, num3):
             return
     
         threading.Thread(target=module_joiner.start, args=(tokens, serverid, invitelink, memberscreen, delay, module_status, answers, api, bypasscaptcha, delete_joinms, join_channelid)).start()
+        
+    if num2 == 2:
+      if num3 == 1:
+        serverid = str(Setting.leaver_serverid.get())
+    
+        delay = Setting.leaver_delay.get()
+    
+        if serverid == "":
+          print("[-] ServerID is not set")
+          return
+    
+        threading.Thread(target=module_leaver.start, args=(serverid, delay, tokens)).start()
+
+      if num3 == 2:    
+        threading.Thread(target=module_leaver.stop).start()
+        
   if num1 == 2:
     if num2 == 1:
       if num3 == 1:
@@ -340,6 +357,13 @@ def module_status(num1, num2, num3):
       if num3 == 2:
         SettingVariable.joinerresult_failed +=1
         Setting.fai_joiner_Label.set("Failed: "+str(SettingVariable.joinerresult_failed).zfill(3))
+    if num2 == 2:
+      if num3 == 1:
+        SettingVariable.leaverresult_success +=1
+        Setting.suc_leaver_Label.set("Success: "+str(SettingVariable.leaverresult_success).zfill(3))
+      if num3 == 2:
+        SettingVariable.leaverresult_failed +=1
+        Setting.fai_leaver_Label.set("Failed: "+str(SettingVariable.leaverresult_failed).zfill(3))
   if num1 == 2:
     if num2 == 1:
       if num3 == 1:
@@ -370,7 +394,7 @@ def module_scroll_frame(num1, num2):
   clear_frame(frame_scroll)
   if num1 == 1:
     if num2 == 1:
-      # Join Leave
+      # Joiner
       # Frame Number 01_01
       def hcaptcha_select():
         global answers, api
@@ -443,6 +467,31 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Join Status", font=("Roboto", 12)).place(x=205,y=190)
       tk.Label(modules_frame01_01, bg=c13, fg="#fff", textvariable=Setting.suc_joiner_Label, font=("Roboto", 12)).place(x=210,y=215)
       tk.Label(modules_frame01_01, bg=c13, fg="#fff", textvariable=Setting.fai_joiner_Label, font=("Roboto", 12)).place(x=210,y=240)
+
+      # Leaver
+      # Frame Number 01_02
+      modules_frame01_02 = ctk.CTkFrame(module_frame, width=470, height=275, border_width=0, fg_color=c13)
+      modules_frame01_02.grid(row=0, column=1, padx=6, pady=6)
+      tk.Label(modules_frame01_02, bg=c13, fg="#fff", text="Leaver", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Canvas(modules_frame01_02, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+      
+      ctk.CTkButton(modules_frame01_02, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: Setting.leaver_serverid.set("")).place(x=5,y=33)
+      ctk.CTkEntry(modules_frame01_02, bg_color=c13, fg_color=c7, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.leaver_serverid).place(x=85,y=33)
+      tk.Label(modules_frame01_02, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=31)
+
+      CTkLabel(modules_frame01_02, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=55)
+      def show_value01_02(value):
+          tooltip01_02.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame01_02, from_=0.1, to=3.0, variable=Setting.leaver_delay, command=show_value01_02)
+      test.place(x=5,y=80)
+      tooltip01_02 = CTkToolTip(test, message=round(Setting.leaver_delay.get(), 1))
+
+      ctk.CTkButton(modules_frame01_02, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 2, 1)).place(x=5,y=100)
+      ctk.CTkButton(modules_frame01_02, text="Stop", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 2, 2)).place(x=70,y=100)
+      
+      tk.Label(modules_frame01_02, bg=c13, fg="#fff", text="Leaver Status", font=("Roboto", 12)).place(x=205,y=55)
+      tk.Label(modules_frame01_02, bg=c13, fg="#fff", textvariable=Setting.suc_leaver_Label, font=("Roboto", 12)).place(x=210,y=80)
+      tk.Label(modules_frame01_02, bg=c13, fg="#fff", textvariable=Setting.fai_leaver_Label, font=("Roboto", 12)).place(x=210,y=105)
   
       printl("debug", "Open Join Leave Tab")
               
