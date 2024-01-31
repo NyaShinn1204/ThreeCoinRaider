@@ -7,4 +7,4 @@ Creating... Coming Soon!
 </p>
 
 ## Links
-[Discord](https://discord.com/invite/4AZNXaCVHv)  
+[Discord](https://discord.com/invite/24rqXJNWFA)  
