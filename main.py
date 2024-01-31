@@ -678,7 +678,7 @@ def module_scroll_frame(num1, num2):
       tk.Label(credits_frame, bg=c2, fg=c8, text="ThreeCoinRaider discord:", font=("Roboto", 12)).place(x=0,y=25)
       test = tk.Label(credits_frame, bg=c2, fg=c9, text="Discord invite link", font=("Roboto", 12, "underline"))
       test.place(x=180,y=25)
-      test.bind("<Button-1>", lambda e:webbrowser.open_new("https://discord.gg/4AZNXaCVHv"))
+      test.bind("<Button-1>", lambda e:webbrowser.open_new("https://discord.gg/24rqXJNWFA"))
       tk.Label(credits_frame, bg=c2, fg="#fff", text="Main developer and updater:", font=("Roboto", 12)).place(x=0,y=50)
       tk.Label(credits_frame, bg=c2, fg=c10, text=developer, font=("Roboto", 12)).place(x=210,y=50)
       tk.Label(credits_frame, bg=c2, fg="#fff", text="Main contributors:", font=("Roboto", 12)).place(x=0,y=75)
