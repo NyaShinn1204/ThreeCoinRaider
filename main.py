@@ -47,7 +47,7 @@ import module.proxy_checker as proxy_checker
 #import bypass.solver.solver as solver
 import module.joiner.utilities.get_balance as get_balance
 
-version = "1.0.0"
+version = "0.1.0"
 theme = "twocoin"
 developer = "NyaShinn1204"
 contributors = "None"
