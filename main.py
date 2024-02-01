@@ -1,9 +1,3 @@
-#import data.icon as get_icon
-#import tkinter as tk 
-#root = tk.Tk() 
-#root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(data=get_icon.get_window_icon()))
-#root.mainloop()
-#
 import os
 import time
 import json
@@ -47,7 +41,7 @@ import module.proxy_checker as proxy_checker
 #import bypass.solver.solver as solver
 import module.joiner.utilities.get_balance as get_balance
 
-version = "0.1.0"
+version = "0.1.1"
 theme = "twocoin"
 developer = "NyaShinn1204"
 contributors = "None"
@@ -98,7 +92,6 @@ from data.settings import Setting, SettingVariable
 #Set language
 
 language = json.load(open('./config.json', 'r', encoding="utf-8"))["language"]
-
 lang_load = json.load(open('./data/language.json', 'r', encoding="utf-8"))
 
 def lang_load_set(name):

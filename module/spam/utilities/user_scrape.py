@@ -8,7 +8,7 @@ users = []
 def get_members(serverid, channelid, token):
     global users
     print(f"Scraping in {serverid} with {token}")
-    members = scrape(token, serverid, channelid)
+    members = DiscordSocket(token, serverid, channelid).run()
     for member in members:
         print(f"Scraped {member}")
         users.append(member)
@@ -56,6 +56,7 @@ class Utils:
                     memberdata['updates'].append(chunk['item'])
 
         return memberdata
+
 class DiscordSocket(websocket.WebSocketApp):
     def __init__(self, token, guild_id, channel_id):
         self.token = token
@@ -130,7 +131,3 @@ class DiscordSocket(websocket.WebSocketApp):
                     self.scrapeUsers()
             if self.endScraping:
                 self.close()
-
-def scrape(token: str, guild_id: str, channel_id: str):
-    sb = DiscordSocket(token, guild_id, channel_id)
-    return sb.run()
