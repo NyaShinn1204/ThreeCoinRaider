@@ -66,8 +66,6 @@ func main() {
 				if len(users) > 0 {
 					// ランダムに数個取り出す
 					randomIDs := getRandomIDs(args[8:], 3)
-
-					// 一行に出力
 					formattedIDs := make([]string, len(randomIDs))
 					for i, id := range randomIDs {
 						formattedIDs[i] = formatID(id)
@@ -76,13 +74,6 @@ func main() {
 
 					contents_tmp = contents + " " + strings.Join(formattedIDs, " ")
 				}
-				//if len(users) > 0 {
-				//	usersSlice := strings.Split(users, "")
-				//
-				//	randomElements := getRandomElements(usersSlice, 2)
-				//	contents := "abc " + strings.Join(randomElements, " ") + " abc"
-				//	fmt.Println("Contents:", contents)
-				//}
 				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents_tmp, token_file, proxie_file)
 				time.Sleep(time.Duration(delay) * time.Second)
 			}
@@ -290,7 +281,6 @@ func getRandomIDs(inputIDs []string, count int) []string {
 	rand.Seed(time.Now().UnixNano())
 	length := len(inputIDs)
 
-	// countが入力スライスの長さ以上の場合は全ての要素を返す
 	if count >= length {
 		return inputIDs
 	}
@@ -306,7 +296,6 @@ func getRandomIDs(inputIDs []string, count int) []string {
 }
 
 func formatID(id string) string {
-	// 不要な文字を取り除いてからフォーマット
 	id = strings.ReplaceAll(id, "'", "")
 	id = strings.ReplaceAll(id, "\"", "")
 	id = strings.ReplaceAll(id, "[", "")
