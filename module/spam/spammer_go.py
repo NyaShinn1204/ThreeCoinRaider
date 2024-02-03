@@ -34,7 +34,6 @@ def monitor_process(module_status, channelid):
     while process.poll() is None:
         output = process.stdout.readline().strip()
         if output:
-            print(output)
             matches = re.findall(r'\b\d+\b', output)
             if matches:
                 channelid = matches[0]
