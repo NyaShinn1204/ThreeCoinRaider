@@ -5,9 +5,9 @@ import threading
 
 import module.spam.utilities.user_scrape as user_scrape
 
-def start(token_file, proxie_file, tokens, module_status, serverid, channelid, contents, allchannel, allping, mentions, threads):
+def start(token_file, proxie_file, delay, tokens, module_status, serverid, channelid, contents, allchannel, allping, mentions, threads):
     global process
-    users = ""
+    users = []
     print("Starting the process.")
     print(threads)
     if allping == True:
@@ -17,7 +17,8 @@ def start(token_file, proxie_file, tokens, module_status, serverid, channelid, c
             return
         else:
             print(users)
-    command = ['go', 'run', 'spammer_go.go', serverid, channelid, contents, f'{token_file}', f'{proxie_file}', f'{threads}', f'{allchannel}'] + users
+    print(delay)
+    command = ['go', 'run', 'spammer_go.go', serverid, channelid, contents, f'{token_file}', f'{proxie_file}', f'{threads}', f'{allchannel}', f'{delay}'] + users
     process = subprocess.Popen(command, stdout=subprocess.PIPE, text=True, cwd=r"./module/spam/")
     monitor_thread = threading.Thread(target=monitor_process, args=(module_status, channelid))
     monitor_thread.start()
@@ -33,6 +34,7 @@ def monitor_process(module_status, channelid):
     while process.poll() is None:
         output = process.stdout.readline().strip()
         if output:
+            print(output)
             matches = re.findall(r'\b\d+\b', output)
             if matches:
                 channelid = matches[0]

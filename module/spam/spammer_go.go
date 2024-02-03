@@ -22,6 +22,7 @@ var token_file string
 var proxie_file string
 var threads_str string
 var allchannel string
+var delay_str string
 
 func main() {
 	args := os.Args[1:]
@@ -33,7 +34,9 @@ func main() {
 	threads_str = args[5]
 	threads, err := strconv.Atoi(threads_str)
 	allchannel = args[6]
-	users := args[7:]
+	delay_str = args[7]
+	delay, err := strconv.Atoi(delay_str)
+	users := args[8:]
 	contents_tmp := ""
 
 	fmt.Println(args[7:])
@@ -62,7 +65,7 @@ func main() {
 				}
 				if len(users) > 0 {
 					// ランダムに数個取り出す
-					randomIDs := getRandomIDs(args[7:], 3)
+					randomIDs := getRandomIDs(args[8:], 3)
 
 					// 一行に出力
 					formattedIDs := make([]string, len(randomIDs))
@@ -81,6 +84,7 @@ func main() {
 				//	fmt.Println("Contents:", contents)
 				//}
 				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents_tmp, token_file, proxie_file)
+				time.Sleep(time.Duration(delay) * time.Second)
 			}
 		}()
 	}
