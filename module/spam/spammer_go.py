@@ -1,12 +1,24 @@
 import subprocess
 import re
+import random
 import threading
 
-def start(token_file, proxie_file, module_status, serverid, channelid, contents, allchannel, threads):
+import module.spam.utilities.user_scrape as user_scrape
+
+def start(token_file, proxie_file, tokens, module_status, serverid, channelid, contents, allchannel, allping, mentions, threads):
     global process
+    users = ""
     print("Starting the process.")
     print(threads)
-    process = subprocess.Popen(['go', 'run', 'spammer_go.go', serverid, channelid, contents, f'{token_file}', f'{proxie_file}', f'{threads}', f'{allchannel}'], stdout=subprocess.PIPE, text=True, cwd=r"./module/spam/")
+    if allping == True:
+        users = user_scrape.get_members(serverid, channelid, random.choice(tokens))
+        if users == None:
+            print("[-] んーメンバーが取得できなかったっぽい token死なないように一回止めるね")
+            return
+        else:
+            print(users)
+    command = ['go', 'run', 'spammer_go.go', serverid, channelid, contents, f'{token_file}', f'{proxie_file}', f'{threads}', f'{allchannel}'] + users
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, text=True, cwd=r"./module/spam/")
     monitor_thread = threading.Thread(target=monitor_process, args=(module_status, channelid))
     monitor_thread.start()
 

@@ -325,6 +325,7 @@ def module_thread(num1, num2, num3):
         serverid = str(Setting.gospam_serverid.get())
         channelid = str(Setting.gospam_channelid.get())
         allchannel = Setting.gospam_allch.get()
+        allping = Setting.gospam_allping.get()
         
         contents = gospam_message.get("0.0","end-1c")
         threads = round(Setting.gospam_threads.get())
@@ -336,8 +337,7 @@ def module_thread(num1, num2, num3):
           print("[-] ChannelID is not set")
           return    
     
-        threading.Thread(target=module_go_spammer.start, args=(token_file, proxie_file, module_status, serverid, channelid, contents, allchannel, threads)).start()
-
+        threading.Thread(target=module_go_spammer.start, args=(token_file, proxie_file, tokens, module_status, serverid, channelid, contents, allchannel, allping, mentions, threads)).start()
       if num3 == 2:
         threading.Thread(target=module_go_spammer.stop).start()
 
@@ -552,9 +552,13 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Go Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame02_02, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
     
-      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.gospam_allch, text="All Ch").place(x=5,y=30)
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.gospam_allping, text="All Ping").place(x=5,y=30)
       test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
-      test.place(x=70,y=30)
+      test.place(x=80,y=30)
+      CTkToolTip(test, delay=0.5, message="Add a Mention to a random user to the message to be spammed")
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.gospam_allch, text="All Ch").place(x=5,y=52)
+      test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
+      test.place(x=70,y=52)
       CTkToolTip(test, delay=0.5, message="Randomly select channels to spam") 
       
       ctk.CTkButton(modules_frame02_02, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=146)

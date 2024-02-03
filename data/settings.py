@@ -114,6 +114,8 @@ class Setting:
   
   gospam_allch = tk.BooleanVar()
   gospam_allch.set(False)
+  gospam_allping = tk.BooleanVar()
+  gospam_allping.set(False)
 
   gospam_serverid = tk.StringVar()
   gospam_serverid.set("")

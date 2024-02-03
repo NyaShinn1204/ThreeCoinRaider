@@ -33,11 +33,14 @@ func main() {
 	threads_str = args[5]
 	threads, err := strconv.Atoi(threads_str)
 	allchannel = args[6]
+	users := args[7:]
+	contents_tmp := ""
+
+	fmt.Println(args[7:])
 
 	channels, err := getChannels(getRandomToken(token_file), serverid)
 
 	if err != nil {
-		// エラー処理: 文字列を整数に変換できない場合の処理を追加してください
 		fmt.Println("threadsの変換に失敗しました:", err)
 		return
 	}
@@ -57,7 +60,27 @@ func main() {
 					}
 					channelid = randomchannel
 				}
-				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents, token_file, proxie_file)
+				if len(users) > 0 {
+					// ランダムに数個取り出す
+					randomIDs := getRandomIDs(args[7:], 3)
+
+					// 一行に出力
+					formattedIDs := make([]string, len(randomIDs))
+					for i, id := range randomIDs {
+						formattedIDs[i] = formatID(id)
+					}
+					fmt.Printf("Random IDs: %s\n", strings.Join(formattedIDs, " | "))
+
+					contents_tmp = contents + " " + strings.Join(formattedIDs, " ")
+				}
+				//if len(users) > 0 {
+				//	usersSlice := strings.Split(users, "")
+				//
+				//	randomElements := getRandomElements(usersSlice, 2)
+				//	contents := "abc " + strings.Join(randomElements, " ") + " abc"
+				//	fmt.Println("Contents:", contents)
+				//}
+				sendRequest(fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages", channelid), serverid, contents_tmp, token_file, proxie_file)
 			}
 		}()
 	}
@@ -114,16 +137,13 @@ func sendRequest(url string, serverid string, contents string, token_file string
 
 	resp, err := client.Do(req)
 	if err != nil {
-		//fmt.Println("Request error:", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 200 {
 		fmt.Println("Success:", channelid, resp.StatusCode, proxy)
-		//fmt.Println("[+] 送信に成功しました ChannelID:", channelid)
 	} else {
-		//fmt.Println("[-] 送信に失敗しました ChannelID:", channelid)
 		fmt.Println("Failed:", channelid, resp.StatusCode, proxy)
 	}
 }
@@ -216,8 +236,6 @@ func getChannels(token string, guildID string) ([]string, error) {
 				return nil, err
 			}
 
-			//fmt.Println(resp.StatusCode)
-
 			for _, channel := range data {
 				channelType, ok := channel["type"].(float64)
 				if !ok {
@@ -262,4 +280,33 @@ func chooseRandomChannel(channels []string) (string, error) {
 	rand.Seed(time.Now().UnixNano())
 	index := rand.Intn(len(channels))
 	return channels[index], nil
+}
+
+func getRandomIDs(inputIDs []string, count int) []string {
+	rand.Seed(time.Now().UnixNano())
+	length := len(inputIDs)
+
+	// countが入力スライスの長さ以上の場合は全ての要素を返す
+	if count >= length {
+		return inputIDs
+	}
+
+	result := make([]string, count)
+	perm := rand.Perm(length)
+
+	for i := 0; i < count; i++ {
+		result[i] = inputIDs[perm[i]]
+	}
+
+	return result
+}
+
+func formatID(id string) string {
+	// 不要な文字を取り除いてからフォーマット
+	id = strings.ReplaceAll(id, "'", "")
+	id = strings.ReplaceAll(id, "\"", "")
+	id = strings.ReplaceAll(id, "[", "")
+	id = strings.ReplaceAll(id, "]", "")
+	id = strings.ReplaceAll(id, ",", "")
+	return fmt.Sprintf("<@%s>", id)
 }
