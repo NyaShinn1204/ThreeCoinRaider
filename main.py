@@ -331,6 +331,8 @@ def module_thread(num1, num2, num3):
         
         threads = round(Setting.gospam_threads.get())
         delay = Setting.gospam_delay.get()
+        
+        mentions = Setting.gospam_mention.get()
             
         if serverid == "":
           print("[-] ServerID is not set")
@@ -585,6 +587,12 @@ def module_scroll_frame(num1, num2):
       test.place(x=225,y=222)
       tooltip02_03 = CTkToolTip(test, message=round(Setting.gospam_delay.get(), 1))
 
+      CTkLabel(modules_frame02_02, text_color="#fff", text="Mention Count (s)", font=("Roboto", 15)).place(x=225,y=237)
+      def show_value02_03(value):
+          tooltip02_03.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_mention, command=show_value02_03)
+      test.place(x=225,y=262)
+      tooltip02_03 = CTkToolTip(test, message=round(Setting.gospam_mention.get()))
 
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
       gospam_message = ctk.CTkTextbox(modules_frame02_02, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)

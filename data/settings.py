@@ -126,6 +126,8 @@ class Setting:
   gospam_threads.set(25)
   gospam_delay = tk.DoubleVar()
   gospam_delay.set(0.1)
+  gospam_mention = tk.DoubleVar()
+  gospam_mention.set(3)
   
 class SettingVariable:
   joinerresult_success = 0
