@@ -14,6 +14,8 @@ gray = Fore.LIGHTBLACK_EX + Fore.WHITE
 
 changenick = False
 
+nickname = "みけねこ的うるはるしあ"
+
 # Fix Nerd Code
 # And Fix Can't use Captcha Solver
 # Skkiding.. :sad:
@@ -61,11 +63,7 @@ def change_nicker(token, serverid, nickname):
     extract_token = f"{extract(token+']').split('.')[0]}.{extract(token+']').split('.')[1]}"
     req_header = header.request_header(token)
     headers = req_header
-    req = requests.patch(f"https://discord.com/api/v9/guilds/{serverid}/members/@me/nick", headers=headers,
-        json={
-            "nick": nickname
-        }
-    )
+    req = requests.patch(f"https://discord.com/api/v9/guilds/{serverid}/members/@me/nick", headers=headers, json={"nick": nickname})
     if req.status_code == 200:
         print(f'Successfully Changed Nickname {gray}| ' + Fore.CYAN + extract_token + Fore.RESET)
     if req.status_code != 200:
@@ -117,7 +115,7 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                     if memberscreen == True:
                         accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
                     if changenick == True:
-                        change_nicker(token, serverid, "みけねこ的うるはるしあ")
+                        change_nicker(token, serverid, nickname)
                 else:
                     printl("error", f"{pretty}Failed Captcha Bypass {gray}| " + Fore.CYAN + extract_token + Fore.RESET+ " | " + newresponse.text.replace("\n", ""))
             else:
@@ -141,7 +139,7 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
             if memberscreen == True:
                 accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
             if changenick == True:
-                delete_join_msg(token, serverid, "みけねこ的うるはるしあ")
+                delete_join_msg(token, serverid, nickname)
     except Exception as err:
         print(f"[-] ERROR: {err} ")
         return
