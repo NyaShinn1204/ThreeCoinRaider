@@ -23,6 +23,7 @@ var proxie_file string
 var threads_str string
 var allchannel string
 var delay_str string
+var allping string
 var mentions_str string
 
 func main() {
@@ -37,8 +38,9 @@ func main() {
 	allchannel = args[6]
 	delay_str = args[7]
 	delay, err := strconv.Atoi(delay_str)
-	users := args[8:]
-	mentions_str = args[9]
+	allping = args[8]
+	users := args[9:]
+	mentions_str = args[10]
 	mentions, err := strconv.Atoi(mentions_str)
 	contents_tmp := ""
 
@@ -66,7 +68,7 @@ func main() {
 					}
 					channelid = randomchannel
 				}
-				if len(users) > 0 {
+				if len(users) > 0 && allping == "True" {
 					// ランダムに数個取り出す
 					randomIDs := getRandomIDs(args[8:], mentions)
 					formattedIDs := make([]string, len(randomIDs))

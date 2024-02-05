@@ -104,6 +104,8 @@ class Setting:
   
   nmspam_delay = tk.DoubleVar()
   nmspam_delay.set(0.1)
+  nmspam_mention = tk.DoubleVar()
+  nmspam_mention.set(3)
   
   
   # go spam

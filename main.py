@@ -300,6 +300,8 @@ def module_thread(num1, num2, num3):
         #mentions = Setting.delay99_02.get()
     
         delay = Setting.nmspam_delay.get()
+        
+        mentions = Setting.nmspam_mention.get()
     
         if serverid == "":
           print("[-] ServerID is not set")
@@ -453,11 +455,11 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=165)
 
       CTkLabel(modules_frame01_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=192)
-      def show_value01_01(value):
-          tooltip01_01.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame01_01, from_=0.1, to=3.0, variable=Setting.joiner_delay, command=show_value01_01)
+      def show_value01_01_01(value):
+          tooltip01_01_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame01_01, from_=0.1, to=3.0, variable=Setting.joiner_delay, command=show_value01_01_01)
       test.place(x=5,y=217)
-      tooltip01_01 = CTkToolTip(test, message=round(Setting.joiner_delay.get(), 1))
+      tooltip01_01_01 = CTkToolTip(test, message=round(Setting.joiner_delay.get(), 1))
 
       ctk.CTkButton(modules_frame01_01, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 1, 1)).place(x=5,y=237)
 
@@ -477,11 +479,11 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame01_02, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=31)
 
       CTkLabel(modules_frame01_02, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=55)
-      def show_value01_02(value):
-          tooltip01_02.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame01_02, from_=0.1, to=3.0, variable=Setting.leaver_delay, command=show_value01_02)
+      def show_value01_02_01(value):
+          tooltip01_02_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame01_02, from_=0.1, to=3.0, variable=Setting.leaver_delay, command=show_value01_02_01)
       test.place(x=5,y=80)
-      tooltip01_02 = CTkToolTip(test, message=round(Setting.leaver_delay.get(), 1))
+      tooltip01_02_01 = CTkToolTip(test, message=round(Setting.leaver_delay.get(), 1))
 
       ctk.CTkButton(modules_frame01_02, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 2, 1)).place(x=5,y=100)
       ctk.CTkButton(modules_frame01_02, text="Stop", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 2, 2)).place(x=70,y=100)
@@ -532,12 +534,20 @@ def module_scroll_frame(num1, num2):
 
 
       CTkLabel(modules_frame02_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=197)
-      def show_value02_01(value):
-          tooltip02_01.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame02_01, from_=0.1, to=3.0, variable=Setting.nmspam_delay, command=show_value02_01)
+      def show_value02_01_01(value):
+          tooltip02_01_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_01, from_=0.1, to=3.0, variable=Setting.nmspam_delay, command=show_value02_01_01)
       test.place(x=5,y=222)
-      tooltip02_01 = CTkToolTip(test, message=round(Setting.nmspam_delay.get(), 1))
+      tooltip02_01_01 = CTkToolTip(test, message=round(Setting.nmspam_delay.get(), 1))
 
+      CTkLabel(modules_frame02_01, text_color="#fff", text="Mention Count (s)", font=("Roboto", 15)).place(x=225,y=237)
+      def show_value02_01_02(value):
+          tooltip02_01_02.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_01, from_=3, to=50, variable=Setting.nmspam_mention, command=show_value02_01_02)
+      test.place(x=225,y=262)
+      tooltip02_01_02 = CTkToolTip(test, message=round(Setting.nmspam_mention.get()))
+
+      
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
       nmspam_message = ctk.CTkTextbox(modules_frame02_01, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
       nmspam_message.place(x=150,y=55)
@@ -574,25 +584,25 @@ def module_scroll_frame(num1, num2):
 
 
       CTkLabel(modules_frame02_02, text_color="#fff", text="Threads", font=("Roboto", 15)).place(x=5,y=197)
-      def show_value02_02(value):
-          tooltip02_02.configure(message=round(value))
-      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_threads, command=show_value02_02)
+      def show_value02_02_01(value):
+          tooltip02_02_01.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_threads, command=show_value02_02_01)
       test.place(x=5,y=222)
-      tooltip02_02 = CTkToolTip(test, message=round(Setting.gospam_threads.get()))
+      tooltip02_02_01 = CTkToolTip(test, message=round(Setting.gospam_threads.get()))
 
       CTkLabel(modules_frame02_02, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=225,y=197)
-      def show_value02_03(value):
-          tooltip02_03.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame02_02, from_=0.1, to=3.0, variable=Setting.gospam_delay, command=show_value02_03)
+      def show_value02_02_02(value):
+          tooltip02_02_02.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_02, from_=0.1, to=3.0, variable=Setting.gospam_delay, command=show_value02_02_02)
       test.place(x=225,y=222)
-      tooltip02_03 = CTkToolTip(test, message=round(Setting.gospam_delay.get(), 1))
+      tooltip02_02_02 = CTkToolTip(test, message=round(Setting.gospam_delay.get(), 1))
 
       CTkLabel(modules_frame02_02, text_color="#fff", text="Mention Count (s)", font=("Roboto", 15)).place(x=225,y=237)
-      def show_value02_03(value):
-          tooltip02_03.configure(message=round(value))
-      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_mention, command=show_value02_03)
+      def show_value02_02_03(value):
+          tooltip02_02_03.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_mention, command=show_value02_02_03)
       test.place(x=225,y=262)
-      tooltip02_03 = CTkToolTip(test, message=round(Setting.gospam_mention.get()))
+      tooltip02_02_03 = CTkToolTip(test, message=round(Setting.gospam_mention.get()))
 
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
       gospam_message = ctk.CTkTextbox(modules_frame02_02, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
