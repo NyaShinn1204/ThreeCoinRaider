@@ -140,12 +140,12 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                 printl("info", f"{pretty}Successfully Token Join {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
                 if delete_joinms == True:
                     printl("info", f"{pretty}Deleting Join Message {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                    delete_join_msg(token, headers, join_channelid)
+                    delete_join_msg(token, join_channelid)
                 module_status(1, 1, 1)
             if memberscreen == True:
                 accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
             if changenick == True:
-                delete_join_msg(token, serverid, nickname)
+                change_nicker(token, serverid, nickname)
     except Exception as err:
         print(f"[-] ERROR: {err} ")
         return
