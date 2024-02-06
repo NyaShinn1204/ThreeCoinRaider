@@ -20,6 +20,8 @@ nickname = "みけねこ的うるはるしあ"
 # And Fix Can't use Captcha Solver
 # Skkiding.. :sad:
 
+# Wait.. What..?? Why can I participate if I shouldn't be able to Hcapture solve...?
+
 def get_filename():
   return os.path.basename(__file__)    
 
@@ -98,31 +100,35 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                 payload = {
                     "captcha_key": solver.bypass_captcha(answers, token, "https://discord.com", joinreq.json()['captcha_sitekey'], apis)
                 }
-                newresponse = session.post(f"https://discord.com/api/v9/invites/{invitelink}", headers=headers, json=payload)
-                if newresponse.status_code == 200:
-                    if "captcha_key" not in newresponse.json():
-                        if joinreq.json().get("message") == "The user is banned from this guild.":
-                            printl("error", f"{pretty}サーバーからBANされています {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                            module_status(1, 1, 2)
-                        if "You need to verify your account in order to perform this action." in newresponse.json():
-                            printl("error", f"{pretty}認証が必要です {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                            module_status(1, 1, 2)
-                        printl("info", f"{pretty}Successfully Token Join {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                        if delete_joinms == True:
-                            printl("info", f"{pretty}Deleting Join Message {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                            delete_join_msg(token, join_channelid)
-                        module_status(1, 1, 1)
-                    if memberscreen == True:
-                        accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
-                    if changenick == True:
-                        change_nicker(token, serverid, nickname)
-                else:
-                    printl("error", f"{pretty}Failed Captcha Bypass {gray}| " + Fore.CYAN + extract_token + Fore.RESET+ " | " + newresponse.text.replace("\n", ""))
+            else:
+                payload = {
+                    "captcha_key": None
+                }
+            newresponse = session.post(f"https://discord.com/api/v9/invites/{invitelink}", headers=headers, json=payload)
+            if newresponse.status_code == 200:
+                if "captcha_key" not in newresponse.json():
+                    if joinreq.json().get("message") == "The user is banned from this guild.":
+                        printl("error", f"{pretty}サーバーからBANされています {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
+                        module_status(1, 1, 2)
+                    if "You need to verify your account in order to perform this action." in newresponse.json():
+                        printl("error", f"{pretty}認証が必要です {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
+                        module_status(1, 1, 2)
+                    printl("info", f"{pretty}Successfully Token Join {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
+                    if delete_joinms == True:
+                        printl("info", f"{pretty}Deleting Join Message {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
+                        delete_join_msg(token, join_channelid)
+                    module_status(1, 1, 1)
+                if memberscreen == True:
+                    accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
+                if changenick == True:
+                    change_nicker(token, serverid, nickname)
             else:
                 if "captcha_key" in joinreq.json():
                     printl("error", f"{pretty}Failed Token Join (Captcha Wrong) {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
                     print(joinreq.json())
                     module_status(1, 1, 2)
+                else:
+                    printl("error", f"{pretty}Failed Captcha Bypass {gray}| " + Fore.CYAN + extract_token + Fore.RESET+ " | " + newresponse.text.replace("\n", ""))
         if joinreq.status_code == 200:
             if "captcha_key" not in joinreq.json():
                 if joinreq.json().get("message") == "The user is banned from this guild.":

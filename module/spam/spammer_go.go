@@ -61,6 +61,7 @@ func main() {
 			defer wg.Done()
 
 			for {
+				contents_tmp = contents
 				if allchannel == "True" {
 					randomchannel, err := chooseRandomChannel(channels)
 					if err != nil {

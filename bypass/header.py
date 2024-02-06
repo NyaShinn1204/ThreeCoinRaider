@@ -94,6 +94,7 @@ def request_header_fingerprint(token):
         "Authorization": token,
         "Connection": "keep-alive",
         "Content-Type": "application/json",
+        "Cookie": get_cookie.get_cookie(),
         "Host": "discord.com",
         "Origin": "https://discord.com",
         "Pragma": "no-cache",
@@ -102,10 +103,13 @@ def request_header_fingerprint(token):
         "Sec-Fetch-Site": "same-origin",
         "sec-ch-ua-platform": "Windows",
         "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
         "TE": "Trailers",
         "User-Agent": agent_string,
         "x-fingerprint": fingerprint,
-        "X-Super-Properties": base64.b64encode(json.dumps(device_info).encode('utf-8')).decode("utf-8"),
-        "X-Debug-Options": "bugReporterEnabled"
+        "x-debug-options": "bugReporterEnabled",
+        "x-discord-locale": "ja",
+        "x-discord-timezone": "Asia/Tokyo",
+        "x-super-properties": base64.b64encode(json.dumps(device_info).encode('utf-8')).decode("utf-8")
     }
     return headers
