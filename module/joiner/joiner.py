@@ -107,9 +107,6 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
             newresponse = session.post(f"https://discord.com/api/v9/invites/{invitelink}", headers=headers, json=payload)
             if newresponse.status_code == 200:
                 if "captcha_key" not in newresponse.json():
-                    if joinreq.json().get("message") == "The user is banned from this guild.":
-                        printl("error", f"{pretty}サーバーからBANされています {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                        module_status(1, 1, 2)
                     if "You need to verify your account in order to perform this action." in newresponse.json():
                         printl("error", f"{pretty}認証が必要です {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
                         module_status(1, 1, 2)
@@ -131,9 +128,6 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                     printl("error", f"{pretty}Failed Captcha Bypass {gray}| " + Fore.CYAN + extract_token + Fore.RESET+ " | " + newresponse.text.replace("\n", ""))
         if joinreq.status_code == 200:
             if "captcha_key" not in joinreq.json():
-                if joinreq.json().get("message") == "The user is banned from this guild.":
-                    printl("error", f"{pretty}サーバーからBANされています {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
-                    module_status(1, 1, 2)
                 if "You need to verify your account in order to perform this action." in joinreq.json():
                     printl("error", f"{pretty}認証が必要です {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
                     module_status(1, 1, 2)
@@ -146,6 +140,13 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
                 accept_rules_bypass(token, joinreq.json(), serverid, invitelink)
             if changenick == True:
                 change_nicker(token, serverid, nickname)
+        if joinreq.status_code == 403:
+            if joinreq.json()["message"] or "\u3053\u306e\u30e6\u30fc\u30b6\u30fc\u306f\u3001\u3053\u306e\u30b5\u30fc\u30d0\u30fc\u304b\u3089BAN\u3055\u308c\u3066\u3044\u307e\u3059\u3002" or "The user is banned from this guild." in joinreq.json():
+                printl("error", f"{pretty}Banned fom Server {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
+                module_status(1, 1, 2)
+        else:
+            print(joinreq.text)
+            print(joinreq.status_code)
     except Exception as err:
         print(f"[-] ERROR: {err} ")
         return
