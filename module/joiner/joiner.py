@@ -19,6 +19,7 @@ nickname = "みけねこ的うるはるしあ"
 # Fix Nerd Code
 # And Fix Can't use Captcha Solver
 # Skkiding.. :sad:
+# how to fix
 
 # Wait.. What..?? Why can I participate if I shouldn't be able to Hcapture solve...?
 
