@@ -5,6 +5,3 @@ Creating... Coming Soon!
 <p align="center">
   <img src="https://i.imgur.com/qpTzVlX.png" alt="ThreeCoinRaider-on-developer" width="1000">
 </p>
-
-## Links
-[Discord](https://discord.com/invite/24rqXJNWFA)  
