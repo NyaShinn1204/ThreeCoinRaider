@@ -7,10 +7,7 @@ import re
 from httpx import Client
 from httpx_socks import SyncProxyTransport
 
-import module.spam.utilities.channel_scrape as ch_scrape
-import module.spam.utilities.user_scrape as user_scrape
 import bypass.header as header
-import bypass.random_convert as random_convert
 
 status = True
 timelock = False
@@ -33,10 +30,8 @@ def extract(format_token):
         token = format_token
     return token
 
-def start(delay, tokens, module_status, proxysetting, proxies, proxytype, serverid, channelid, contents, allchannel, allping, mentions, randomstring, ratelimit, randomconvert):
+def start(delay, tokens, module_status, proxysetting, proxies, proxytype, serverid, channelid, contents):
     global status
-    global channels
-    global users
     global timelock
     status = True
     
@@ -44,16 +39,6 @@ def start(delay, tokens, module_status, proxysetting, proxies, proxytype, server
     
     print(token)
     print(serverid)
-    if allchannel == True:
-        channels = ch_scrape.get_channels(token,int(serverid))
-        if channels == None:
-            print("[-] んーチャンネルが取得できなかったっぽい token死なないように一回止めるね")
-            return
-    if allping == True:
-        users = user_scrape.get_members(serverid, channelid, token)
-        if users == None:
-            print("[-] んーメンバーが取得できなかったっぽい token死なないように一回止めるね")
-            return
     
     while status is True:
         if status == False:
@@ -64,12 +49,10 @@ def start(delay, tokens, module_status, proxysetting, proxies, proxytype, server
             print("[+] RateLimit Fixed")
             timelock = False
         threading.Thread(target=spammer_thread, args=(tokens, module_status, proxysetting, proxies, proxytype,
-                        allchannel, allping, channelid, contents, randomstring, mentions, ratelimit, randomconvert)).start()
+                        channelid, contents)).start()
         time.sleep(float(delay))
         
-def spammer_thread(tokens, module_status, proxysetting, proxies, proxytype, allchannel, allping, channelid, contents, randomstring, mentions, ratelimit, randomconvert):
-    global channels
-    global users
+def spammer_thread(tokens, module_status, proxysetting, proxies, proxytype, channelid, contents):
     global status
     global timelock
 
@@ -82,16 +65,7 @@ def spammer_thread(tokens, module_status, proxysetting, proxies, proxytype, allc
     if content == "":
         print("[-] メッセージが設定されていないので初期のメッセージを送信します")
         content = "ThreeCoinRaider On Top :skull:"
-    if randomconvert == True:
-        content = random_convert.random_convert(content)
-    if allping == True:
-        for i in range(int(mentions)):
-            content = content + f"<@{random.choice(users)}>"
-    if randomstring == True:
-        content = f"{content}\n{randomname(10)}"
-    if allchannel == True:
-        channelid = random.choice(channels)
-    data = {"name": content, "type": 11, "auto_archive_duration": 4320, "location": "Thread Browser Toolbar"}
+    data = {"name": content, "type": "11", "auto_archive_duration": "4320", "location": "Thread Browser Toolbar"}
     req_header = header.request_header(token)
     headers = req_header
     extract_token = f"{extract(token+']').split('.')[0]}.{extract(token+']').split('.')[1]}"
@@ -102,27 +76,25 @@ def spammer_thread(tokens, module_status, proxysetting, proxies, proxytype, allc
         if proxysetting == True:
             proxy = random.choice(proxies)
             request = Client(transport=SyncProxyTransport.from_url(f'{proxytype}://{proxy}'))
-        x = request.post(f"https://discord.com/api/v9/channels/{channelid}/messages/threads", headers=headers, json=data)
+        x = request.post(f"https://discord.com/api/v9/channels/{channelid}/threads", headers=headers, json=data)
         if x.status_code == 403:
             print(f"[-] このチャンネルで作成できません ChannelID: {channelid} Token: {extract_token}.******** Status: {x.status_code}")
-            module_status(2, 1, 2)
+            module_status(2, 3, 2)
         if x.status_code == 404:
             print(f"[-] このチャンネルは存在しません ChannelID: {channelid} Token: {extract_token}.******** Status: {x.status_code}")
-            module_status(2, 1, 2)
+            module_status(2, 3, 2)
         if x.status_code == 201:
-            module_status(2, 1, 1)
+            module_status(2, 3, 1)
             if proxysetting == True:
                 print(f"[+] 作成に成功しました ChannelID: {channelid} Token: {extract_token}.******** Proxy: {proxy}")
             else:
                 print(f"[+] 作成に成功しました ChannelID: {channelid} Token: {extract_token}.********")
         else:
             if x.status_code == 429 or x.status_code == 20016:
-                print("[-] RateLimit!! Please Wait!! "+json.loads(x.text)["retry_after"])
-                if ratelimit == True:
-                    timelock = True
-                return
+                print("[-] RateLimit!! Please Wait!! "+str(x.json()["retry_after"]))
             else:
-                print("Unknown Error: Please Create Issue ", x.json, x.status_code)
-            module_status(2, 1, 2)
-    except:
+                print("Unknown Error: Please Create Issue ", x.text, x.status_code)
+            module_status(2, 3, 2)
+    except Exception as error:
+        print(error)
         pass

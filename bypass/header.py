@@ -53,8 +53,10 @@ def request_header(token):
         "sec-ch-ua-mobile": "?0",
         "TE": "Trailers",
         "User-Agent": agent_string,
-        "X-Super-Properties": base64.b64encode(json.dumps(device_info).encode('utf-8')).decode("utf-8"),
-        "X-Debug-Options": "bugReporterEnabled"
+        "X-Debug-Options": "bugReporterEnabled",
+        "X-Discord-Locale": "ja",
+        "X-Discord-Timezone": "Asia/Tokyo",
+        "X-Super-Properties": base64.b64encode(json.dumps(device_info).encode('utf-8')).decode("utf-8")
     }
     return headers
 
