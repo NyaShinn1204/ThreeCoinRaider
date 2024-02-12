@@ -37,7 +37,7 @@ def monitor_process(module_status, channelid):
     global process
     while process.poll() is None:
         output = process.stdout.readline().strip()
-        print(output)
+        #print(output)
         if output:
             matches = re.findall(r'\b\d+\b', output)
             if matches:
