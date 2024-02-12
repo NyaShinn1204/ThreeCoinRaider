@@ -145,9 +145,9 @@ def joiner_thread(token, serverid, invitelink, memberscreen, module_status, answ
             if joinreq.json()["message"] or "\u3053\u306e\u30e6\u30fc\u30b6\u30fc\u306f\u3001\u3053\u306e\u30b5\u30fc\u30d0\u30fc\u304b\u3089BAN\u3055\u308c\u3066\u3044\u307e\u3059\u3002" or "The user is banned from this guild." in joinreq.json():
                 printl("error", f"{pretty}Banned fom Server {gray}| " + Fore.CYAN + extract_token + Fore.RESET)
                 module_status(1, 1, 2)
-        else:
-            print(joinreq.text)
-            print(joinreq.status_code)
+        #else:
+        #    print(joinreq.text)
+        #    print(joinreq.status_code)
     except Exception as err:
         print(f"[-] ERROR: {err} ")
         return
