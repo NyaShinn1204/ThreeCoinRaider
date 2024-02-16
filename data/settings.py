@@ -104,6 +104,8 @@ class Setting:
   
   nmspam_delay = tk.DoubleVar()
   nmspam_delay.set(0.1)
+  nmspam_mention = tk.DoubleVar()
+  nmspam_mention.set(3)
   
   
   # go spam
@@ -114,6 +116,8 @@ class Setting:
   
   gospam_allch = tk.BooleanVar()
   gospam_allch.set(False)
+  gospam_allping = tk.BooleanVar()
+  gospam_allping.set(False)
 
   gospam_serverid = tk.StringVar()
   gospam_serverid.set("")
@@ -122,6 +126,30 @@ class Setting:
   
   gospam_threads = tk.DoubleVar()
   gospam_threads.set(25)
+  gospam_delay = tk.DoubleVar()
+  gospam_delay.set(0.1)
+  gospam_mention = tk.DoubleVar()
+  gospam_mention.set(3)
+  
+  
+  # threads spam
+  
+  suc_threadsspam_Label = tk.StringVar()
+  suc_threadsspam_Label.set("Success: 000")
+  fai_threadsspam_Label = tk.StringVar()
+  fai_threadsspam_Label.set("Failed: 000")  
+  
+  threadsspam_serverid = tk.StringVar()
+  threadsspam_serverid.set("")
+  threadsspam_channelid = tk.StringVar()
+  threadsspam_channelid.set("")
+  
+  threadsspam_threads = tk.DoubleVar()
+  threadsspam_threads.set(25)
+  threadsspam_delay = tk.DoubleVar()
+  threadsspam_delay.set(0.1)
+  threadsspam_mention = tk.DoubleVar()
+  threadsspam_mention.set(3)
   
 class SettingVariable:
   joinerresult_success = 0
@@ -132,3 +160,5 @@ class SettingVariable:
   nmspamresult_failed = 0
   gospamresult_success = 0
   gospamresult_failed = 0
+  threadsspamresult_success = 0
+  threadsspamresult_failed = 0

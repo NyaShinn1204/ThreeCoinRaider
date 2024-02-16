@@ -1,9 +1,3 @@
-#import data.icon as get_icon
-#import tkinter as tk 
-#root = tk.Tk() 
-#root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(data=get_icon.get_window_icon()))
-#root.mainloop()
-#
 import os
 import time
 import json
@@ -30,6 +24,7 @@ import module.joiner.joiner as module_joiner
 import module.leaver as module_leaver
 import module.spam.spammer_go as module_go_spammer
 import module.spam.spammer as module_normal_spammer
+import module.spam.threads_spammer as module_threads_spammer
 #import module.leaver as module_leaver
 #import module.spam.spammer as module_spammer
 #import module.vc_join as module_vc_join
@@ -47,7 +42,7 @@ import module.proxy_checker as proxy_checker
 #import bypass.solver.solver as solver
 import module.joiner.utilities.get_balance as get_balance
 
-version = "0.1.0"
+version = "0.1.1"
 theme = "twocoin"
 developer = "NyaShinn1204"
 contributors = "None"
@@ -98,7 +93,6 @@ from data.settings import Setting, SettingVariable
 #Set language
 
 language = json.load(open('./config.json', 'r', encoding="utf-8"))["language"]
-
 lang_load = json.load(open('./data/language.json', 'r', encoding="utf-8"))
 
 def lang_load_set(name):
@@ -242,7 +236,7 @@ def module_thread(num1, num2, num3):
         delete_joinms = Setting.joiner_deletems.get()
         bypasscaptcha = Setting.joiner_bypasscap.get()
     
-        delay = Setting.joiner_deletems.get()
+        delay = Setting.joiner_delay.get()
     
         answers = None
         api = None
@@ -307,6 +301,8 @@ def module_thread(num1, num2, num3):
         #mentions = Setting.delay99_02.get()
     
         delay = Setting.nmspam_delay.get()
+        
+        mentions = Setting.nmspam_mention.get()
     
         if serverid == "":
           print("[-] ServerID is not set")
@@ -332,21 +328,46 @@ def module_thread(num1, num2, num3):
         serverid = str(Setting.gospam_serverid.get())
         channelid = str(Setting.gospam_channelid.get())
         allchannel = Setting.gospam_allch.get()
+        allping = Setting.gospam_allping.get()
         
         contents = gospam_message.get("0.0","end-1c")
+        
         threads = round(Setting.gospam_threads.get())
+        delay = Setting.gospam_delay.get()
+        
+        mentions = Setting.gospam_mention.get()
             
-        #if serverid == "":
-        #  print("[-] ServerID is not set")
-        #  return
+        if serverid == "":
+          print("[-] ServerID is not set")
+          return
         if channelid == "":
           print("[-] ChannelID is not set")
           return    
     
-        threading.Thread(target=module_go_spammer.start, args=(token_file, proxie_file, module_status, serverid, channelid, contents, allchannel, threads)).start()
-
+        threading.Thread(target=module_go_spammer.start, args=(token_file, proxie_file, delay, tokens, module_status, serverid, channelid, contents, allchannel, allping, mentions, threads)).start()
       if num3 == 2:
         threading.Thread(target=module_go_spammer.stop).start()
+
+    if num2 == 3:
+      if num3 == 1:
+        serverid = str(Setting.threadsspam_serverid.get())
+        channelid = str(Setting.threadsspam_channelid.get())
+    
+        contents = threadsspam_message.get("0.0","end-1c")
+    
+        delay = Setting.threadsspam_delay.get()
+            
+        if serverid == "":
+          print("[-] ServerID is not set")
+          return
+        if channelid == "":
+          print("[-] ChannelID is not set")
+          return    
+    
+        threading.Thread(target=module_threads_spammer.start, args=(delay, tokens, module_status, proxysetting, proxies, proxytype, serverid, channelid, contents)).start()
+
+      if num3 == 2:
+        threading.Thread(target=module_threads_spammer.stop).start()
 
 def module_status(num1, num2, num3):
   if num1 == 1:
@@ -379,7 +400,13 @@ def module_status(num1, num2, num3):
       if num3 == 2:
         SettingVariable.gospamresult_failed +=1
         Setting.fai_gospam_Label.set("Failed: "+str(SettingVariable.gospamresult_failed).zfill(3))
-
+    if num2 == 3:
+      if num3 == 1:
+        SettingVariable.threadsspamresult_success +=1
+        Setting.suc_threadsspam_Label.set("Success: "+str(SettingVariable.threadsspamresult_success).zfill(3))
+      if num3 == 2:
+        SettingVariable.threadsspamresult_failed +=1
+        Setting.fai_threadsspam_Label.set("Failed: "+str(SettingVariable.threadsspamresult_failed).zfill(3))
 
 def clear_frame(frame):
   for widget in frame.winfo_children():
@@ -388,7 +415,7 @@ def clear_frame(frame):
 
 def module_scroll_frame(num1, num2):
   global module_frame
-  global nmspam_message, gospam_message
+  global nmspam_message, gospam_message, threadsspam_message
   frame_scroll = module_frame = ctk.CTkScrollableFrame(root, fg_color=c2, bg_color=c2, width=1000, height=630)
   module_frame.place(x=245, y=70)
   clear_frame(frame_scroll)
@@ -456,11 +483,11 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame01_01, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=165)
 
       CTkLabel(modules_frame01_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=192)
-      def show_value01_01(value):
-          tooltip01_01.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame01_01, from_=0.1, to=3.0, variable=Setting.joiner_delay, command=show_value01_01)
+      def show_value01_01_01(value):
+          tooltip01_01_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame01_01, from_=0.1, to=3.0, variable=Setting.joiner_delay, command=show_value01_01_01)
       test.place(x=5,y=217)
-      tooltip01_01 = CTkToolTip(test, message=round(Setting.joiner_delay.get(), 1))
+      tooltip01_01_01 = CTkToolTip(test, message=round(Setting.joiner_delay.get(), 1))
 
       ctk.CTkButton(modules_frame01_01, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 1, 1)).place(x=5,y=237)
 
@@ -480,11 +507,11 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame01_02, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=31)
 
       CTkLabel(modules_frame01_02, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=55)
-      def show_value01_02(value):
-          tooltip01_02.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame01_02, from_=0.1, to=3.0, variable=Setting.leaver_delay, command=show_value01_02)
+      def show_value01_02_01(value):
+          tooltip01_02_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame01_02, from_=0.1, to=3.0, variable=Setting.leaver_delay, command=show_value01_02_01)
       test.place(x=5,y=80)
-      tooltip01_02 = CTkToolTip(test, message=round(Setting.leaver_delay.get(), 1))
+      tooltip01_02_01 = CTkToolTip(test, message=round(Setting.leaver_delay.get(), 1))
 
       ctk.CTkButton(modules_frame01_02, text="Start", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 2, 1)).place(x=5,y=100)
       ctk.CTkButton(modules_frame01_02, text="Stop", fg_color=c2, hover_color=c5, width=60, height=25, command=lambda: module_thread(1, 2, 2)).place(x=70,y=100)
@@ -535,12 +562,20 @@ def module_scroll_frame(num1, num2):
 
 
       CTkLabel(modules_frame02_01, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=197)
-      def show_value02_01(value):
-          tooltip02_01.configure(message=round(value, 1))
-      test = ctk.CTkSlider(modules_frame02_01, from_=0.1, to=3.0, variable=Setting.nmspam_delay, command=show_value02_01)
+      def show_value02_01_01(value):
+          tooltip02_01_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_01, from_=0.1, to=3.0, variable=Setting.nmspam_delay, command=show_value02_01_01)
       test.place(x=5,y=222)
-      tooltip02_01 = CTkToolTip(test, message=round(Setting.nmspam_delay.get(), 1))
+      tooltip02_01_01 = CTkToolTip(test, message=round(Setting.nmspam_delay.get(), 1))
 
+      CTkLabel(modules_frame02_01, text_color="#fff", text="Mention Count (s)", font=("Roboto", 15)).place(x=225,y=237)
+      def show_value02_01_02(value):
+          tooltip02_01_02.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_01, from_=3, to=50, variable=Setting.nmspam_mention, command=show_value02_01_02)
+      test.place(x=225,y=262)
+      tooltip02_01_02 = CTkToolTip(test, message=round(Setting.nmspam_mention.get()))
+
+      
       tk.Label(modules_frame02_01, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
       nmspam_message = ctk.CTkTextbox(modules_frame02_01, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
       nmspam_message.place(x=150,y=55)
@@ -559,9 +594,13 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Go Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
       tk.Canvas(modules_frame02_02, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
     
-      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.gospam_allch, text="All Ch").place(x=5,y=30)
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.gospam_allping, text="All Ping").place(x=5,y=30)
       test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
-      test.place(x=70,y=30)
+      test.place(x=80,y=30)
+      CTkToolTip(test, delay=0.5, message="Add a Mention to a random user to the message to be spammed")
+      ctk.CTkCheckBox(modules_frame02_02, bg_color=c13, text_color="#fff", border_color=c3, checkbox_width=20, checkbox_height=20, hover=False, border_width=3, variable=Setting.gospam_allch, text="All Ch").place(x=5,y=52)
+      test = ctk.CTkLabel(modules_frame02_02, text_color="#fff", text="(?)")
+      test.place(x=70,y=52)
       CTkToolTip(test, delay=0.5, message="Randomly select channels to spam") 
       
       ctk.CTkButton(modules_frame02_02, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=146)
@@ -573,11 +612,25 @@ def module_scroll_frame(num1, num2):
 
 
       CTkLabel(modules_frame02_02, text_color="#fff", text="Threads", font=("Roboto", 15)).place(x=5,y=197)
-      def show_value02_02(value):
-          tooltip02_02.configure(message=round(value))
-      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_threads, command=show_value02_02)
+      def show_value02_02_01(value):
+          tooltip02_02_01.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_threads, command=show_value02_02_01)
       test.place(x=5,y=222)
-      tooltip02_02 = CTkToolTip(test, message=round(Setting.gospam_threads.get()))
+      tooltip02_02_01 = CTkToolTip(test, message=round(Setting.gospam_threads.get()))
+
+      CTkLabel(modules_frame02_02, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=225,y=197)
+      def show_value02_02_02(value):
+          tooltip02_02_02.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_02, from_=0.1, to=3.0, variable=Setting.gospam_delay, command=show_value02_02_02)
+      test.place(x=225,y=222)
+      tooltip02_02_02 = CTkToolTip(test, message=round(Setting.gospam_delay.get(), 1))
+
+      CTkLabel(modules_frame02_02, text_color="#fff", text="Mention Count (s)", font=("Roboto", 15)).place(x=225,y=237)
+      def show_value02_02_03(value):
+          tooltip02_02_03.configure(message=round(value))
+      test = ctk.CTkSlider(modules_frame02_02, from_=1, to=50, variable=Setting.gospam_mention, command=show_value02_02_03)
+      test.place(x=225,y=262)
+      tooltip02_02_03 = CTkToolTip(test, message=round(Setting.gospam_mention.get()))
 
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", text="Message", font=("Roboto", 12)).place(x=150,y=30)
       gospam_message = ctk.CTkTextbox(modules_frame02_02, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
@@ -590,6 +643,42 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", textvariable=Setting.suc_gospam_Label, font=("Roboto", 12)).place(x=335,y=169)
       tk.Label(modules_frame02_02, bg=c13, fg="#fff", textvariable=Setting.fai_gospam_Label, font=("Roboto", 12)).place(x=335,y=194)        
 
+      # Threads Spammer
+      # Frame Number 02_03
+      modules_frame02_03 = ctk.CTkFrame(module_frame, width=470, height=300, border_width=0, fg_color=c13)
+      modules_frame02_03.grid(row=1, column=0, padx=6, pady=6)
+      tk.Label(modules_frame02_03, bg=c13, fg="#fff", text="Threads Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Canvas(modules_frame02_03, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+
+      
+      ctk.CTkButton(modules_frame02_03, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=146)
+      ctk.CTkEntry(modules_frame02_03, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.threadsspam_serverid).place(x=85,y=146)
+      tk.Label(modules_frame02_03, bg=c13, fg="#fff", text="Server ID", font=("Roboto", 12)).place(x=240,y=144)
+      ctk.CTkButton(modules_frame02_03, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25).place(x=5,y=175)
+      ctk.CTkEntry(modules_frame02_03, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.threadsspam_channelid).place(x=85,y=175)
+      tk.Label(modules_frame02_03, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=173)
+
+
+      CTkLabel(modules_frame02_03, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=197)
+      def show_value02_03_01(value):
+          tooltip02_03_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_03, from_=0.1, to=3.0, variable=Setting.threadsspam_delay, command=show_value02_03_01)
+      test.place(x=5,y=222)
+      tooltip02_03_01 = CTkToolTip(test, message=round(Setting.threadsspam_delay.get(), 1))
+
+
+      
+      tk.Label(modules_frame02_03, bg=c13, fg="#fff", text="Title Name", font=("Roboto", 12)).place(x=5,y=30)
+      threadsspam_message = ctk.CTkTextbox(modules_frame02_03, bg_color=c13, fg_color=c4, text_color="#fff", width=250, height=75)
+      threadsspam_message.place(x=5,y=55)
+        
+      ctk.CTkButton(modules_frame02_03, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 3, 1)).place(x=5,y=245)
+      ctk.CTkButton(modules_frame02_03, text="Stop", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 3, 2)).place(x=70,y=245)
+
+      tk.Label(modules_frame02_03, bg=c13, fg="#fff", text="Status", font=("Roboto", 12)).place(x=330,y=144)
+      tk.Label(modules_frame02_03, bg=c13, fg="#fff", textvariable=Setting.suc_threadsspam_Label, font=("Roboto", 12)).place(x=335,y=169)
+      tk.Label(modules_frame02_03, bg=c13, fg="#fff", textvariable=Setting.fai_threadsspam_Label, font=("Roboto", 12)).place(x=335,y=194)
+      
       printl("debug", "Open Spammer Tab")
         
   if num1 == 2:
@@ -675,21 +764,18 @@ def module_scroll_frame(num1, num2):
       test = tk.Label(credits_frame, bg=c2, fg=c9, text="Github link", font=("Roboto", 12, "underline"))
       test.place(x=175,y=0)
       test.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/NyaShinn1204/ThreeCoinRaider"))
-      tk.Label(credits_frame, bg=c2, fg=c8, text="ThreeCoinRaider discord:", font=("Roboto", 12)).place(x=0,y=25)
-      test = tk.Label(credits_frame, bg=c2, fg=c9, text="Discord invite link", font=("Roboto", 12, "underline"))
-      test.place(x=180,y=25)
-      test.bind("<Button-1>", lambda e:webbrowser.open_new("https://discord.gg/24rqXJNWFA"))
-      tk.Label(credits_frame, bg=c2, fg="#fff", text="Main developer and updater:", font=("Roboto", 12)).place(x=0,y=50)
-      tk.Label(credits_frame, bg=c2, fg=c10, text=developer, font=("Roboto", 12)).place(x=210,y=50)
-      tk.Label(credits_frame, bg=c2, fg="#fff", text="Main contributors:", font=("Roboto", 12)).place(x=0,y=75)
-      tk.Label(credits_frame, bg=c2, fg=c10, text=contributors, font=("Roboto", 12)).place(x=137,y=75)
-      tk.Label(credits_frame, bg=c2, fg="#fff", text="Main testers:", font=("Roboto", 12)).place(x=0,y=100)
-      tk.Label(credits_frame, bg=c2, fg=c10, text=testers, font=("Roboto", 12)).place(x=100,y=100)
+      tk.Label(credits_frame, bg=c2, fg="#fff", text="Main developer and updater:", font=("Roboto", 12)).place(x=0,y=25)
+      tk.Label(credits_frame, bg=c2, fg=c10, text=developer, font=("Roboto", 12)).place(x=210,y=25)
+      tk.Label(credits_frame, bg=c2, fg="#fff", text="Main contributors:", font=("Roboto", 12)).place(x=0,y=50)
+      tk.Label(credits_frame, bg=c2, fg=c10, text=contributors, font=("Roboto", 12)).place(x=137,y=50)
+      tk.Label(credits_frame, bg=c2, fg="#fff", text="Main testers:", font=("Roboto", 12)).place(x=0,y=75)
+      tk.Label(credits_frame, bg=c2, fg=c10, text=testers, font=("Roboto", 12)).place(x=100,y=75)
       
-      tk.Label(credits_frame, bg=c2, fg="#fff", text="Respect:", font=("Roboto", 12)).place(x=0,y=150)
-      tk.Label(credits_frame, bg=c2, fg=c10, text="Akebi GC", font=("Roboto", 12)).place(x=15,y=170)
-      tk.Label(credits_frame, bg=c2, fg=c10, text="Bkebi GC", font=("Roboto", 12)).place(x=15,y=190)
-      tk.Label(credits_frame, bg=c2, fg=c10, text="TwoCoinRaider", font=("Roboto", 12)).place(x=15,y=210)
+      tk.Label(credits_frame, bg=c2, fg="#fff", text="Respect:", font=("Roboto", 12)).place(x=0,y=125)
+      tk.Label(credits_frame, bg=c2, fg=c10, text="Akebi GC", font=("Roboto", 12)).place(x=15,y=145)
+      tk.Label(credits_frame, bg=c2, fg=c10, text="Bkebi GC", font=("Roboto", 12)).place(x=15,y=165)
+      tk.Label(credits_frame, bg=c2, fg=c10, text="TwoCoinRaider", font=("Roboto", 12)).place(x=15,y=185)
+      tk.Label(credits_frame, bg=c2, fg=c10, text="RaizouRaider", font=("Roboto", 12)).place(x=15,y=206)
 
       printl("debug", "Open About Tab")
 

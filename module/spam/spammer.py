@@ -120,7 +120,7 @@ def spammer_thread(tokens, module_status, proxysetting, proxies, proxytype, allc
                 print(f"[+] 送信に成功しました ChannelID: {channelid} Token: {extract_token}.********")
         else:
             if x.status_code == 429 or x.status_code == 20016:
-                print("[-] RateLimit!! Please Wait!! "+json.loads(x.text)["retry_after"])
+                print("[-] RateLimit!! Please Wait!! "+x.json()["retry_after"])
                 if ratelimit == True:
                     timelock = True
                 return
