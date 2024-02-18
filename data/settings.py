@@ -133,7 +133,6 @@ class Setting:
   
   
   # threads spam
-  
   suc_threadsspam_Label = tk.StringVar()
   suc_threadsspam_Label.set("Success: 000")
   fai_threadsspam_Label = tk.StringVar()
@@ -151,6 +150,24 @@ class Setting:
   threadsspam_mention = tk.DoubleVar()
   threadsspam_mention.set(3)
   
+  
+  # reaction spam
+  suc_reactionspam_Label = tk.StringVar()
+  suc_reactionspam_Label.set("Success: 000")
+  fai_reactionspam_Label = tk.StringVar()
+  fai_reactionspam_Label.set("Failed: 000")
+  
+  reaction_channelid = tk.StringVar()
+  reaction_channelid.set("")
+  reaction_messageid = tk.StringVar()
+  reaction_messageid.set("")
+  reaction_emoji = tk.StringVar()
+  reaction_emoji.set("")
+  
+  reacspam_delay = tk.DoubleVar()
+  reacspam_delay.set(0.1)
+  
+  
 class SettingVariable:
   joinerresult_success = 0
   joinerresult_failed = 0
@@ -162,3 +179,5 @@ class SettingVariable:
   gospamresult_failed = 0
   threadsspamresult_success = 0
   threadsspamresult_failed = 0
+  reactionspamresult_success = 0
+  reactionspamresult_failed = 0
