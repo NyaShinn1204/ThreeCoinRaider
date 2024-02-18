@@ -120,6 +120,23 @@ def get_hwid():
   except:
     printl("error", "get_hwid error wrong")
 
+def get_invite(invite):
+  try:
+    x = requests.get(f"https://discord.com/api/v9/invites/{invite}?with_counts=true&with_expiration=true")
+    if x.status_code == 200:
+      verify_level = x.json()["guild"]["vverification_level"]
+      if verify_level == 1:
+        printl("info", "Only Email Verify members")
+      if verify_level == 2:
+        printl("info", "Only members who have been on the server for 5 minutes")
+      if verify_level == 3:
+        printl("info", "Only members who have been on the server for 10 minutes")
+      if verify_level == 4:
+        printl("info", "Only Phone Verify members")
+    return x.status_code
+  except:
+    printl("error", "get_invite error wrong")
+
 # load Check Def
 def check_config():
   printl("debug", "Checking Config")
@@ -268,7 +285,11 @@ def module_thread(num1, num2, num3):
           if join_channelid == "":
             print("[-] Join ChannelID is not set")
             return
-    
+        
+        if get_invite(invitelink) == 404:
+          printl("error", "This invite code not found")
+          return  
+        
         threading.Thread(target=module_joiner.start, args=(tokens, serverid, invitelink, memberscreen, delay, module_status, answers, api, bypasscaptcha, delete_joinms, join_channelid)).start()
         
     if num2 == 2:
