@@ -895,7 +895,7 @@ logo = f"""
     B7~!!~~~!~7B         | |  | '_ \| '__/ _ \/ _ \ |    / _ \| | '_ \|  _  // _` | |/ _` |/ _ \ '__|
      #5J7777J55          | |  | | | | | |  __/  __/ |___| (_) | | | | | | \ \ (_| | | (_| |  __/ |   
        &&&&&&&           |_|  |_| |_|_|  \___|\___|\_____\___/|_|_| |_|_|  \_\__,_|_|\__,_|\___|_|   
-                                    :skull:  Proudly Free, Never For Free  :skull:
+                                      Product Free, Never For Free  
 """
 print(Colorate.Horizontal(Colors.cyan_to_blue, logo, 1))
 print(f"""
