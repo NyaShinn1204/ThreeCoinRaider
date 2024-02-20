@@ -25,6 +25,7 @@ import module.leaver as module_leaver
 import module.spam.spammer_go as module_go_spammer
 import module.spam.spammer as module_normal_spammer
 import module.spam.threads_spammer as module_threads_spammer
+import module.spam.reaction as module_reaction
 #import module.leaver as module_leaver
 #import module.spam.spammer as module_spammer
 #import module.vc_join as module_vc_join
@@ -42,7 +43,7 @@ import module.proxy_checker as proxy_checker
 #import bypass.solver.solver as solver
 import module.joiner.utilities.get_balance as get_balance
 
-version = "0.1.1"
+version = "0.1.2"
 theme = "twocoin"
 developer = "NyaShinn1204"
 contributors = "None"
@@ -119,6 +120,23 @@ def get_hwid():
       return uuid
   except:
     printl("error", "get_hwid error wrong")
+
+def get_invite(invite):
+  try:
+    x = requests.get(f"https://discord.com/api/v9/invites/{invite}?with_counts=true&with_expiration=true")
+    if x.status_code == 200:
+      verify_level = x.json()["guild"]["vverification_level"]
+      if verify_level == 1:
+        printl("info", "Only Email Verify members")
+      if verify_level == 2:
+        printl("info", "Only members who have been on the server for 5 minutes")
+      if verify_level == 3:
+        printl("info", "Only members who have been on the server for 10 minutes")
+      if verify_level == 4:
+        printl("info", "Only Phone Verify members")
+    return x.status_code
+  except:
+    printl("error", "get_invite error wrong")
 
 # load Check Def
 def check_config():
@@ -268,7 +286,11 @@ def module_thread(num1, num2, num3):
           if join_channelid == "":
             print("[-] Join ChannelID is not set")
             return
-    
+        
+        if get_invite(invitelink) == 404:
+          printl("error", "This invite code not found")
+          return  
+        
         threading.Thread(target=module_joiner.start, args=(tokens, serverid, invitelink, memberscreen, delay, module_status, answers, api, bypasscaptcha, delete_joinms, join_channelid)).start()
         
     if num2 == 2:
@@ -368,6 +390,26 @@ def module_thread(num1, num2, num3):
 
       if num3 == 2:
         threading.Thread(target=module_threads_spammer.stop).start()
+      
+    if num2 == 4:
+      if num3 == 1:
+        channelid = str(Setting.reaction_channelid.get())
+        messageid = str(Setting.reaction_messageid.get())
+        emoji = str(Setting.reaction_emoji.get())
+        
+        delay = Setting.reacspam_delay.get()
+    
+        if channelid == "":
+          print("[-] ChannelID is not set")
+          return
+        if messageid == "":
+          print("[-] Messageid is not set")
+          return   
+        if emoji == "":
+          print("[-] Emoji is not set")
+          return
+    
+        threading.Thread(target=module_reaction.start, args=(delay, tokens, module_status, proxysetting, proxies, proxytype, channelid, messageid, emoji)).start()
 
 def module_status(num1, num2, num3):
   if num1 == 1:
@@ -407,6 +449,13 @@ def module_status(num1, num2, num3):
       if num3 == 2:
         SettingVariable.threadsspamresult_failed +=1
         Setting.fai_threadsspam_Label.set("Failed: "+str(SettingVariable.threadsspamresult_failed).zfill(3))
+    if num2 == 4:
+      if num3 == 1:
+        SettingVariable.reactionspamresult_success +=1
+        Setting.suc_reactionspam_Label.set("Success: "+str(SettingVariable.reactionspamresult_success).zfill(3))
+      if num3 == 2:
+        SettingVariable.reactionspamresult_failed +=1
+        Setting.fai_reactionspam_Label.set("Failed: "+str(SettingVariable.reactionspamresult_failed).zfill(3))
 
 def clear_frame(frame):
   for widget in frame.winfo_children():
@@ -679,6 +728,40 @@ def module_scroll_frame(num1, num2):
       tk.Label(modules_frame02_03, bg=c13, fg="#fff", textvariable=Setting.suc_threadsspam_Label, font=("Roboto", 12)).place(x=335,y=169)
       tk.Label(modules_frame02_03, bg=c13, fg="#fff", textvariable=Setting.fai_threadsspam_Label, font=("Roboto", 12)).place(x=335,y=194)
       
+      # Reactions Spammer
+      # Frame Number 02_04
+      modules_frame02_04 = ctk.CTkFrame(module_frame, width=470, height=300, border_width=0, fg_color=c13)
+      modules_frame02_04.grid(row=1, column=1, padx=6, pady=6)
+      tk.Label(modules_frame02_04, bg=c13, fg="#fff", text="Reactions Spammer", font=("Roboto", 12, "bold")).place(x=15,y=0)
+      tk.Canvas(modules_frame02_04, bg=c6, highlightthickness=0, height=4, width=470).place(x=0, y=25)
+      
+      
+      ctk.CTkButton(modules_frame02_04, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: Setting.reaction_channelid.set("")).place(x=5,y=31)
+      ctk.CTkEntry(modules_frame02_04, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.reaction_channelid).place(x=85,y=31)
+      tk.Label(modules_frame02_04, bg=c13, fg="#fff", text="Channel ID", font=("Roboto", 12)).place(x=240,y=29)
+      ctk.CTkButton(modules_frame02_04, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: Setting.reaction_messageid.set("")).place(x=5,y=60)
+      ctk.CTkEntry(modules_frame02_04, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.reaction_messageid).place(x=85,y=60)
+      tk.Label(modules_frame02_04, bg=c13, fg="#fff", text="Message ID", font=("Roboto", 12)).place(x=240,y=58)
+      ctk.CTkButton(modules_frame02_04, text="Clear        ", fg_color=c2, hover_color=c5, width=75, height=25, command=lambda: Setting.reaction_emoji.set("")).place(x=5,y=89)
+      ctk.CTkEntry(modules_frame02_04, bg_color=c13, fg_color=c4, border_color=c4, text_color="#fff", width=150, height=20, textvariable=Setting.reaction_emoji).place(x=85,y=89)
+      tk.Label(modules_frame02_04, bg=c13, fg="#fff", text="Emoji", font=("Roboto", 12)).place(x=240,y=87)
+      test = ctk.CTkLabel(modules_frame02_04, text_color="#fff", text="(?)")
+      test.place(x=290,y=87)
+      CTkToolTip(test, delay=0.5, message="e.x. :skull:  :nerd:") 
+      
+      CTkLabel(modules_frame02_04, text_color="#fff", text="Delay Time (s)", font=("Roboto", 15)).place(x=5,y=112)
+      def show_value02_04_01(value):
+          tooltip02_04_01.configure(message=round(value, 1))
+      test = ctk.CTkSlider(modules_frame02_04, from_=0.1, to=3.0, variable=Setting.reacspam_delay, command=show_value02_04_01)
+      test.place(x=5,y=137)
+      tooltip02_04_01 = CTkToolTip(test, message=round(Setting.reacspam_delay.get(), 1))
+
+      ctk.CTkButton(modules_frame02_04, text="Start", fg_color="#00051e", hover_color=c5, border_width=1, border_color="#00051e", width=60, height=25, command=lambda: module_thread(2, 4, 1)).place(x=5,y=157)
+
+      tk.Label(modules_frame02_04, bg=c13, fg="#fff", text="Status", font=("Roboto", 12)).place(x=205,y=110)
+      tk.Label(modules_frame02_04, bg=c13, fg="#fff", textvariable=Setting.suc_reactionspam_Label, font=("Roboto", 12)).place(x=210,y=135)
+      tk.Label(modules_frame02_04, bg=c13, fg="#fff", textvariable=Setting.fai_reactionspam_Label, font=("Roboto", 12)).place(x=210,y=160)
+      
       printl("debug", "Open Spammer Tab")
         
   if num1 == 2:
@@ -790,12 +873,8 @@ def module_list_frame():
   tk.Canvas(bg=c6, highlightthickness=0, height=2080, width=4).place(x=230, y=0)
   ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("joiner_leaver"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(1, 1)).place(x=20,y=12)
   ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/spammer.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("spammer"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(1, 2)).place(x=20,y=57)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=102)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=148)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=194)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/join_leave.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("soon"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w").place(x=20,y=240)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/setting.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("settings"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(2, 1)).place(x=20,y=286)
-  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/info.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("about"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(2, 2)).place(x=20,y=332)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/setting.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("settings"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(2, 1)).place(x=20,y=516)
+  ctk.CTkButton(master=modulelist, image=ctk.CTkImage(Image.open("data/info.png"),size=(20, 20)), compound="left", fg_color=c4, hover_color=c5, corner_radius=0, text=lang_load_set("about"), width=195, height=40, font=set_fonts(16, "bold"), anchor="w", command= lambda: module_scroll_frame(2, 2)).place(x=20,y=562)
   
   credit_frame = ctk.CTkFrame(root, width=1020, height=50, fg_color=c1, bg_color=c2)
   credit_frame.place(x=245, y=10)
@@ -812,7 +891,7 @@ logo = f"""
     B7~!!~~~!~7B         | |  | '_ \| '__/ _ \/ _ \ |    / _ \| | '_ \|  _  // _` | |/ _` |/ _ \ '__|
      #5J7777J55          | |  | | | | | |  __/  __/ |___| (_) | | | | | | \ \ (_| | | (_| |  __/ |   
        &&&&&&&           |_|  |_| |_|_|  \___|\___|\_____\___/|_|_| |_|_|  \_\__,_|_|\__,_|\___|_|   
-                                    :skull:  Proudly Free, Never For Free  :skull:
+                                      Product Free, Never For Free  
 """
 print(Colorate.Horizontal(Colors.cyan_to_blue, logo, 1))
 print(f"""
