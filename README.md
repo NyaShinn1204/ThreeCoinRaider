@@ -1,5 +1,9 @@
 # ThreeCoinRaider
-Creating... Coming Soon!
+Fucking Shit code.
+It's public, so I don't blame you.
+
+マジでクソコード
+まぁパブリックだから仕方ないね
 
 # Usage (GUI Design Only)
 <p align="center">
