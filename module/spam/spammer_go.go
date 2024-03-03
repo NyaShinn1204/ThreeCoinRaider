@@ -39,14 +39,12 @@ func main() {
 	delay_str = args[7]
 	delay, err := strconv.Atoi(delay_str)
 	allping = args[8]
-	users := args[9:]
-	mentions_str = args[10]
+	users := args[10:]
+	mentions_str = args[9]
 	mentions, err := strconv.Atoi(mentions_str)
 	contents_tmp := ""
 
 	fmt.Println(args[7:])
-
-	channels, err := getChannels(getRandomToken(token_file), serverid)
 
 	if err != nil {
 		fmt.Println("threadsの変換に失敗しました:", err)
@@ -63,6 +61,7 @@ func main() {
 			for {
 				contents_tmp = contents
 				if allchannel == "True" {
+					channels, err := getChannels(getRandomToken(token_file), serverid)
 					randomchannel, err := chooseRandomChannel(channels)
 					if err != nil {
 						fmt.Println("Error:", err)
